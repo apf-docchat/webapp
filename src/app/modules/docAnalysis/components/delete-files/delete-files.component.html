@@ -1,0 +1,38 @@
+<section class="wrapper">
+    @if(showSection !== 'confirm'){
+    <div class="top_section">
+        <div style="width: 100%;">File List</div>
+        <button nz-button nzType="primary" (click)="submitButton()" nzDanger>
+            Delete
+        </button>
+    </div>
+    <div class="content_section">
+        <!-- <label for="" class="collection_name">{{files.length > 1?'Files':'File'}}</label> -->
+        @for (file of docGuideFileSelectionList; track file.file_id; let i = $index) {
+        <div [class]="['file_name', 'no-select',file.is_processed?'exist':'']" (click)="selectDocGuideFile($event,i)"
+            style="cursor: pointer;">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="file.isSelected" [disabled]="file.is_processed"></label>
+            <div class="name">{{file.file_name}}</div>
+        </div>
+        }
+        @empty {
+        <nz-empty></nz-empty>
+        }
+    </div>
+    }
+
+    @if(showSection === 'confirm'){
+    <div class=" confirm_wrapper">
+        <p>Are you sure you want to delete the selected files from DocGuide module?</p>
+        <div style="display: flex; justify-content: flex-end;gap: 5px;">
+            <button nz-button nzType="default" (click)="onConfirm(false)">
+                Cancel
+            </button>
+            <button nz-button nzType="primary" (click)="onConfirm(true)" nzDanger>
+                Delete
+            </button>
+        </div>
+    </div>
+    }
+</section>

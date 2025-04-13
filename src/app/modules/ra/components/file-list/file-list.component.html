@@ -1,0 +1,16 @@
+<section class="file_list_wrapper">
+    <!-- <button nz-button nzType="primary">Upload PDF</button> -->
+    <div class="files">
+        <label class="title" for="uploadedFiles">Uploaded Files</label>
+        <div class="list_wrapper">
+            @for (docGuideFile of uploadedFileList; track docGuideFile.file_id;) {
+            <div nz-tooltip [nzTooltipTitle]="docGuideFile.file_name"
+                [class]="[docGuideFile.file_id===selectedIndex?'selected':'','collection_wrapper']"
+                (click)="onPdfSelection(docGuideFile)">
+                {{docGuideFile.file_name}}
+            </div>
+            }
+        </div>
+    </div>
+
+</section>

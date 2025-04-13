@@ -1,0 +1,94 @@
+<div class="user-nav">
+  @if (collectionSelected) {
+    <div>{{ collectionSelected.collection_name }} Space </div>
+  }
+    <!-- Space Dropdown -->
+  <a nz-dropdown [nzDropdownMenu]="orgMenu">
+    @if(innerWidth >= 800){
+    Spaces
+    }@else {
+    <nz-avatar class="ant-dropdown-icon" nzIcon="folder-open" [nzSize]="35"></nz-avatar>
+    }
+    <span nz-icon nzType="down"></span>
+  </a>
+  <nz-dropdown-menu #orgMenu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      @for (org of organizations; track org.organization_id) {
+        <!-- <li nz-menu-item (click)="org.organization_id !== currentOrganization ? changeOrganization(org) : null"
+          [class.selected]="org.organization_id === currentOrganization">
+          {{ org.organization_name }}
+        </li> -->
+        <li nz-menu-item class="org-list">
+          {{ org.organization_name }}
+        </li>
+        @for (collection of allCollectionList[org.organization_id]; track collection.collection_id) {
+          <li nz-menu-item
+            (click)="collection.collection_id !== collectionSelected?.collection_id ? changeCollection(org, collection) : null"
+            [class.selected]="collection.collection_id === collectionSelected?.collection_id">
+            {{ collection.collection_name }}
+          </li>
+        }
+      }
+    </ul>
+  </nz-dropdown-menu>
+
+  <!-- Organization Dropdown -->
+  <!-- <a nz-dropdown [nzDropdownMenu]="orgMenu">
+    @if(innerWidth >= 800){
+    Team
+    }@else {
+    <nz-avatar class="ant-dropdown-icon" nzIcon="bank" [nzSize]="35"></nz-avatar>
+    }
+    <span nz-icon nzType="down"></span>
+  </a>
+  <nz-dropdown-menu #orgMenu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      @for (org of organizations; track $index) {
+      <li nz-menu-item (click)="org.organization_id !== currentOrganization ? changeOrganization(org) : null"
+        [class.selected]="org.organization_id === currentOrganization">
+        {{ org.organization_name }}
+      </li>
+      }
+    </ul>
+  </nz-dropdown-menu> -->
+
+  <!-- Collection Dropdown -->
+  <!-- <a nz-dropdown [nzDropdownMenu]="collectionMenu">
+    @if(innerWidth >= 800){
+    Space
+    }@else {
+    <nz-avatar class="ant-dropdown-icon" nzIcon="folder-open" [nzSize]="35"></nz-avatar>
+    }
+    <span nz-icon nzType="down"></span>
+  </a>
+  <nz-dropdown-menu #collectionMenu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      @if (selectedOrgCollectionList != []) {
+        @for (collection of selectedOrgCollectionList; track trackByCollectionId(collection)) {
+        <li nz-menu-item
+          (click)="collection.collection_id !== collectionSelected?.collection_id ? changeCollection(collection) : null"
+          [class.selected]="collection.collection_id === collectionSelected?.collection_id">
+          {{ collection.collection_name }}
+        </li>
+        }
+      }
+    </ul>
+  </nz-dropdown-menu> -->
+
+  <!-- User Dropdown -->
+  <a nz-dropdown [nzDropdownMenu]="menu">
+    <nz-avatar class="ant-dropdown-icon" nzIcon="user" [nzSize]="35"></nz-avatar>
+    <span nz-icon nzType="down"></span>
+  </a>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      <!-- <li nz-menu-item [routerLink]="['/user/preferences']">Preferences</li> -->
+      <!-- <li nz-menu-divider></li> -->
+      <li nz-menu-item (click)="userMenuNavigate('dashboard')">Home</li>
+      @if(fncSee) {
+      <li nz-menu-item (click)="userMenuNavigate('admin')">Sys Admin</li>
+      }
+      <li nz-menu-item (click)="logout()">Logout</li>
+    </ul>
+  </nz-dropdown-menu>
+</div>

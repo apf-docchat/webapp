@@ -1,0 +1,18 @@
+<section class="file_list_wrapper">
+    <!-- <button nz-button nzType="primary" (click)="openComponent()">Upload PDF</button> -->
+    <div class="files">
+        <label class="title" for="uploadedFiles">Space Files</label>
+        <div class="list_wrapper">
+            <!-- @for (file of collectionSelected.files; track file.file_id;) { -->
+            <div class="collection_wrapper">
+                <div class="collection_title">{{collectionSelected.collection_name}}</div>
+                @for (item of collectionSelected.files; track item.file_id;) {
+                <label for="item" nz-tooltip [nzTooltipTitle]="item.file_name">
+                    {{item.file_name}}
+                </label>
+                }
+            </div>
+            <!-- } -->
+        </div>
+    </div>
+</section>

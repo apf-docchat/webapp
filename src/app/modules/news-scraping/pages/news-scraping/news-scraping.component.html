@@ -1,0 +1,16 @@
+<section class="ra_wrapper">
+    <app-header></app-header>
+    <div class="content">
+        <div class="left">
+            <nz-segmented [nzOptions]="defaultOptions" (nzValueChange)="handleIndexChange($event)"></nz-segmented>
+            @if (currentTab===0) {
+            <app-list-news></app-list-news>
+            }
+            @else if (currentTab===1) {
+            <app-list-charts></app-list-charts>
+            }
+
+        </div>
+        <app-chat-screen></app-chat-screen>
+    </div>
+</section>

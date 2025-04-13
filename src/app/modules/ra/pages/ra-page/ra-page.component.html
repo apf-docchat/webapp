@@ -1,0 +1,65 @@
+<section class="ra_wrapper">
+    <app-header></app-header>
+    @if(filesListService.currentPDF()){
+    <div class="content" [class]="layoutRation===5?'':layoutRation===7?'sixty_twoty':'twoty_sixty'">
+        <!-- <app-file-list
+            [style.display]="(activeSection === 'files'|| activeSection === 'all')?'block':'none'"></app-file-list> -->
+        <app-pdf-viewer
+            [style.display]="(activeSection === 'pdf'|| activeSection === 'all')?'block':'none'"></app-pdf-viewer>
+        @if(innerWidth >= 800){
+        <div class="controller">
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+                <span nz-icon nzType="holder" nzTheme="outline"></span>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <li nz-menu-item (click)="setLayoutClass(5)">50:50</li>
+                    <li nz-menu-item (click)="setLayoutClass(3)">30:70</li>
+                    <li nz-menu-item (click)="setLayoutClass(7)">70:30</li>
+                </ul>
+            </nz-dropdown-menu>
+        </div>
+        }
+
+        <app-chat-screen
+            [style.display]="(activeSection === 'chat'|| activeSection === 'all')?'block':'none'" [collection]="collectionSelected"></app-chat-screen>
+    </div>
+    }@else {
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3>
+                    Choose your file to start the chat
+                </h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(file of uploadedFileList;track file.file_id){
+                <div class="icon_wrapper" (click)="selectFile(file)">
+                    <span class="icon" nz-icon nzType="file-excel" nzTheme="outline">
+                    </span>
+                    <label class="collection_label" style="text-align: center;"
+                        for="collection_name">{{file.file_name}}</label>
+                </div>
+                }
+                @empty {
+                <nz-empty></nz-empty>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</section>
+
+@if(filesListService.currentPDF() &&activeSection!== 'all'){
+<div class="section_selection">
+    <!-- <span nz-icon nzType="unordered-list" nzTheme="outline" [class]="activeSection === 'files'?'active':''"
+        (click)="setScreen('files')"></span>
+    <nz-divider nzType="vertical"></nz-divider> -->
+    <span nz-icon nzType="file-pdf" nzTheme="outline" [class]="activeSection === 'pdf'?'active':''"
+        (click)="setScreen('pdf')"></span>
+    <nz-divider nzType="vertical"></nz-divider>
+    <span nz-icon nzType="message" nzTheme="outline" [class]="activeSection === 'chat'?'active':''"
+        (click)="setScreen('chat')"></span>
+</div>
+}

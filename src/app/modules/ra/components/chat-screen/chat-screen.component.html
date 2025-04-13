@@ -1,0 +1,67 @@
+<section class="chat_wrapper">
+
+    <div class="chat_head">
+        <div class="title">{{ pdfSrc ? pdfSrc.file_name:''}}</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="changeFile()">
+                Change File
+            </button>
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="createComponentModal(pdfSrc?.file_id!)">
+                Section by section learning
+            </button>
+        </div>
+
+    </div>
+    <div id="messagesContainer" #messagesContainer class="messages_container">
+        @for (message of messageList; track message.index) {
+        <div #chatMessage [class]="['chat_box',message?.isOwnerMe?'':'bot']">
+            @if(message?.message){
+            <div [innerHTML]="message?.message"></div>
+            }
+            @else {
+            <app-chat-loading></app-chat-loading>
+            }
+        </div>
+        }
+        @empty {
+        @if(chatInstructionsList.length==0){
+        <div [class]="['chat_box','no_messages']">No Chat History
+            @for(instruction of chatInstructionsList; track $index){
+                <div>{{instruction}}</div>
+            }
+        </div>
+        }
+        }
+    </div>
+    @if(messageList.length==0 && chatInstructionsList.length>0){
+        <div class="chat_instruction">
+            <div class="card">
+                <div class="title">Hi there! For better experience, please follow these instructions:</div>
+                <div class="content">
+                    <ul>
+                        @for(instruction of chatInstructionsList; track $index){
+                        <li>{{instruction}}</li>
+                        }
+                    </ul>
+    
+                </div>
+            </div>
+        </div>
+    }    
+    <div class="message_option">
+        <option value=""></option>
+    </div>
+    <div class="controller">
+        <input nz-input placeholder="Type your question..." [(ngModel)]="question" type="text"
+            (keyup.enter)="sendMessage()" />
+        <button nz-button nzType="primary" [nzSize]="size" nzShape="round" [disabled]="currentBotChatIndex!==0"
+            (click)="sendMessage()">
+            @if(currentBotChatIndex==0){
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+            }@else {
+            {{remainingTime}}
+            <!-- <span nz-icon nzType="loading" nzTheme="outline"></span> -->
+            }
+        </button>
+    </div>
+</section>

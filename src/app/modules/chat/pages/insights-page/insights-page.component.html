@@ -1,0 +1,43 @@
+<div class="insight-blocks">
+  <!-- <div class="heading">
+    <h3>Action Items</h3>
+  </div> -->
+  <nz-row [nzGutter]="16">
+    @for(insight of insights | keyvalue; track insight.key) {
+    <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" class="insight-col">
+
+      <div class="insight-block-content">
+        <div class="insight-block-header">
+          <div class="insight-block-title">{{ insight.value.title }}</div>
+          <i nz-icon nzType="delete" nzTheme="outline" class="delete-icon" (click)="deleteInsight(insight.key)"></i>
+        </div>
+        @if(insight.value.dataLoading) {
+        <nz-spin [nzSize]="'large'"></nz-spin>
+        } @else {
+        <div class="insight-block-html" [innerHTML]="sanitizeHtml(decodeHtml(insight.value.html_data || ''))"></div>
+        @if(insight.value.image_data) {
+        <div class="insight-block-image">
+          <img [src]="'data:image/png;base64,' + insight.value.image_data" alt="Image response" style="width: 100%;" />
+        </div>
+        }
+        <label>Prompt</label>
+        <input nz-input [(ngModel)]="insight.value.query" placeholder="Enter prompt" />
+        <button style="margin-top: 10px;" nz-button nzType="primary"
+          (click)="modifyInsight(insight.value, insight.key)">Save & Refresh <i>   (Last Refresh: {{ insight.value.updated_at }})</i></button>
+        }
+      </div>
+    </nz-col>
+    }
+    <!-- <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" class="insight-col">
+      
+    </nz-col> -->
+    
+    <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" class="insight-col">
+      <div class="insight-block-content add-insight">
+        <h3>Add Dashboard Item</h3>
+        <app-roles-objectives></app-roles-objectives>
+        <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon" (click)="addInsight()"></i>
+      </div>
+    </nz-col>
+  </nz-row>
+</div>

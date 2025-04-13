@@ -1,0 +1,116 @@
+<nz-card 
+  [nzTitle]="'Set Roles and Objectives'" 
+  class="roles-objectives-card">
+  <nz-collapse>
+    <nz-collapse-panel nzHeader="Role Details">
+      <div class="role-selection">
+        <!-- <nz-radio-group [(ngModel)]="editedRole" (ngModelChange)="onRoleChange($event)">
+          <label 
+            nz-radio 
+            *ngFor="let role of roles" 
+            [nzValue]="role"
+            class="role-radio">
+            {{ role.role_name }}
+          </label>
+        </nz-radio-group> -->
+        <div *ngFor="let role of roles" class="role-button">
+          <button 
+            nz-button 
+            [nzType]="editedRole?.id === role.id ? 'primary' : 'default'"
+            (click)="onRoleChange(role)">
+            {{ role.role_name }} <label *ngIf="selectedRole?.id === role.id"> (current role)</label>
+          </button>
+        </div>
+        <div *ngIf="roles.length === 0">
+          <button 
+            nz-button 
+            [nzType]="'default'"
+            (click)="addRole()">
+            Add your First Role
+          </button>
+        </div>
+        <div class="add-role" (click)="addRole()">
+          <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon"></i>
+        </div>
+        <div  *ngIf="selectRole !== null" class="add-role" (click)="startEditing()">
+          <i nz-icon nzType="edit" nzTheme="outline" class="plus-icon"></i>
+        </div>
+        <div  *ngIf="selectRole !== null" class="add-role" (click)="deleteRole(editedRole?.id || 0)">
+          <i nz-icon nzType="delete" nzTheme="outline" class="plus-icon"></i>
+        </div>
+      </div>
+
+      <div *ngIf="editedRole && !isEditing" class="role-details">
+        <h3>{{ editedRole.role_name }}</h3>
+        <nz-divider></nz-divider>
+        <label>Objectives</label>
+        <p>{{ editedRole.objectives }}</p>
+        <nz-divider></nz-divider>
+        <button 
+          nz-button 
+          nzType="primary" 
+          *ngIf="selectedRole?.id !== editedRole?.id"
+          (click)="chooseRole(editedRole)">
+          Choose this Role
+        </button>
+        <!-- <div>
+          <button *ngIf="selectRole !== null"
+          nz-button 
+          nzType="default" 
+          (click)="startEditing()">
+          Edit
+          </button>
+          <button *ngIf="selectRole !== null" nz-button nzType="default" (click)="deleteRole(editedRole.id || 0)">Delete</button>
+        </div> -->
+      </div>
+
+      <div *ngIf="isEditing" class="edit-section">
+        <form [formGroup]="editForm">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Role</nz-form-label>
+            <nz-form-control [nzSpan]="24">
+              <textarea 
+                nz-input 
+                formControlName="roleText" 
+                placeholder="Enter Role"
+                rows="2">{{ editedRole?.role_name }}
+              </textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="24">Objectives</nz-form-label>
+            <nz-form-control [nzSpan]="24">
+              <textarea 
+                nz-input 
+                formControlName="objectivesText" 
+                placeholder="Enter Objectives"
+                rows="4">
+                {{ editedRole?.objectives }}
+              </textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="edit-actions">
+            <button 
+              nz-button 
+              nzType="default" 
+              (click)="cancelEditing()">
+              Cancel
+            </button>
+            <button 
+              nz-button 
+              nzType="primary" 
+              (click)="saveRoleAndObjectives(editedRole?.id || 0)"
+              [disabled]="editForm.invalid">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- <div class="add-role-button">
+        <button nz-button nzType="primary" (click)="addRole()">Add Role</button>
+      </div> -->
+    </nz-collapse-panel>
+  </nz-collapse>
+</nz-card>

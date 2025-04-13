@@ -1,0 +1,41 @@
+.header_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+
+  backdrop-filter: blur(2px);
+  border: 1px solid #e5e5f75f;
+  box-shadow: 5px 1px 4px rgba(0, 0, 0, 0.3);
+  label {
+    font-size: 21px;
+    font-weight: bold;
+  }
+  .buttons_wrapper {
+    button {
+      font-size: 15px;
+      font-weight: bold;
+      padding: 5px;
+      border: none;
+      background: transparent;
+      color: rgb(65, 65, 65);
+      cursor: pointer;
+    }
+  }
+}
+
+nz-header {
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 0 5px #efefef;
+  background-color: white;
+  height: 46px;
+  line-height: 46px;
+  padding: 0 10px;
+  opacity: 0.8;
+  z-index: 999;
+}

@@ -1,0 +1,60 @@
+.ra_wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: none;
+  min-height: 100vh;
+  background-color: #f2f2f6;
+  // background-image: repeating-radial-gradient(
+  //     circle at 0 0,
+  //     transparent 0,
+  //     #e5e5f728 10px
+  //   ),
+  //   repeating-linear-gradient(#878ac255, #b4b7e8);
+  background-image: var(--background-image);
+  .content {
+    padding: 60px 10px 0px 10px;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    @media (min-width: 1366px) {
+      margin: 0 auto;
+
+      width: 1366px;
+      justify-content: center;
+      // background-color: blue;
+    }
+    .left {
+      display: block;
+      gap: 5px;
+
+      .ant-segmented {
+        margin-bottom: 5px;
+      }
+
+      app-file-list {
+        flex: 1;
+        width: 100%;
+
+        padding: 10px;
+        border-radius: 5px;
+        backdrop-filter: blur(2px);
+        border: 1px solid #e5e5f75f;
+        box-shadow: 5px 10px 18px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    app-chat-screen {
+      border-radius: 5px;
+
+      flex: 1;
+      max-width: 450px;
+      min-width: 230px;
+      height: calc(100vh - 70px);
+
+      backdrop-filter: blur(2px);
+      border: 1px solid #e5e5f75f;
+      box-shadow: 5px 10px 18px rgba(0, 0, 0, 0.3);
+    }
+  }
+}

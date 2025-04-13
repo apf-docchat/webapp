@@ -1,0 +1,9 @@
+<section class="pdf_wrapper">
+    <div>
+        <input nz-input placeholder="Search PDF" [(ngModel)]="stringToSearch" (keyup)="search()" type="text" />
+    </div>
+    <!-- <input type="text" [(ngModel)]="stringToSearch" (keyup)="search()"> -->
+    <pdf-viewer [src]="pdfSrc?.file_url" [render-text]="true" [original-size]="false" style="width: 100%; height: 100%"
+        (on-progress)="onProgress($event)" (after-load-complete)="callBackFn($event)"></pdf-viewer>
+
+</section>

@@ -1,0 +1,63 @@
+<section class="chat_wrapper">
+    <div class="chat_head">
+        <div class="title">{{ sectionSelected().section_title}}</div>
+        <div style="display: flex; gap: 5px;">
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="changeSection()">
+                Change Section
+            </button>
+        </div>
+        <!-- <p>{{inactiveTimer}}</p> -->
+    </div>
+    <div id="messagesContainer" #messagesContainer class="messages_container">
+        @for (message of messageList; track message.index) {
+        <div #chatMessage [class]="['chat_box',message?.isOwnerMe?'':'bot',message?.role === 'action'?'action':'']">
+            @if(message?.message){
+            <div class="inner_box">
+                <!-- @if(message?.role === 'action'){
+                <div style="font-weight: 800; font-size: 12px;">User Interacted</div>
+                } -->
+                <div [style.font-style]="message?.role === 'action' ? 'italic' : ''" [innerHTML]="message?.message">
+                </div>
+                @if(message?.extra_query){
+                <nz-divider></nz-divider>
+                <div>{{message.extra_query}}</div>
+                }
+                @if(message?.call_to_actions && message.index === messageList.length){
+                <div class="control">
+                    @for (actions of message?.call_to_actions; track $index) {
+                    @if(actions?.type=== 'BUTTON'){
+                    <button nz-button [nzSize]="'small'" nzType="primary" (click)="callToActionEvent(actions)">
+                        {{actions?.label}}
+                    </button>
+                    }
+                    }
+                </div>
+                }
+            </div>
+            }
+            @else {
+            <app-chat-loading></app-chat-loading>
+            }
+        </div>
+        }
+        @empty {
+        <div [class]="['chat_box','no_messages']">No Chat History</div>
+        }
+    </div>
+    <div class="message_option">
+        <option value=""></option>
+    </div>
+    <div class="controller">
+        <input nz-input placeholder="Type your question..." [(ngModel)]="question" type="text"
+            (input)="trackInputField()" (keyup.enter)="sendMessage()" />
+        <button nz-button nzType="primary" [nzSize]="'large'" nzShape="round" [disabled]="currentBotChatIndex!==0"
+            (click)="sendMessage()">
+            @if(currentBotChatIndex==0){
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+            }@else {
+            <span nz-icon nzType="loading" nzTheme="outline"></span>
+            {{remainingTime}}
+            }
+        </button>
+    </div>
+</section>

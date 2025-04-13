@@ -1,0 +1,9 @@
+{ 
+"apiBaseUrl": "http://127.0.0.1:5000/api/v2", 
+"logoUrl": "/assets/brand-assets/default-logo.png",
+"nzPrimaryColor": "#db1414",
+"backgroundColor1": "#c2878755",
+"backgroundColor2": "#c28787",
+"folderIconColor": "#db1414",
+"highlightBackgroundColor": "#dc9898"
+}

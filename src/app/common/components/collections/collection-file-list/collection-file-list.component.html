@@ -1,0 +1,83 @@
+@if (currentScreen==='collectionView') {
+<div class="collection_wrapper">
+    <div class="top_section">
+        <label class="collection_name" for="">Space Name</label>
+        <div class="input_section">
+            <nz-select [(ngModel)]="selectedCollection" (ngModelChange)="onCollectionChange($event)" nzShowSearch
+                nzAllowClear nzPlaceHolder="collections">
+                @for (item of collectionList; track item.collection_name) {
+                <nz-option [nzLabel]="item.collection_name" [nzValue]="item.collection_name"></nz-option>
+                }
+            </nz-select>
+            <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="collectionMenu">
+                <span nz-icon nzType="setting" nzTheme="fill"
+                    style="font-size: 20px;color: #5b7088;cursor: pointer;"></span>
+            </a>
+        </div>
+    </div>
+    <div>
+        <label for="" class="collection_name">{{files.length > 1?'Uploaded Files':(files.length == 0)?'No Files in this collection':'Uploaded File'}}
+            @if (files.length >= 1) {
+            <div class="count"> : {{files.length}}</div>
+            }
+        </label>
+
+        @for (file of files; track file.file_id) {
+        <div [class]="['file_name',isNewFile(file)?'new':'']">{{file.file_name}}
+            @if(isNewFile(file)){
+            <div class="icon">
+                New
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>
+}
+@else if (currentScreen==='createCollection') {
+<app-set-collection-name [collection]="selectedCollectionObject" [modulesList] = "modulesList" [isPrivate] = "isPrivate"  [orgChosen] = "orgChosen"
+    (returnValue)="closedCollectionNameScreenCreate($event)"></app-set-collection-name>
+}
+@else if (currentScreen==='UpdateCollectionName') {
+    <app-set-collection-name [collection]="selectedCollectionObject" [modulesList] = "modulesList"
+        (returnValue)="closedCollectionNameScreenUpdate($event)"></app-set-collection-name>
+}
+@else if (currentScreen==='uploadFile') {
+<app-upload-file [collection]="selectedCollectionObject" (returnValue)="closedCollectionNameScreen($event)"></app-upload-file>
+}
+
+@else if (currentScreen==='moveFiles'|| currentScreen==='deleteFiles') {
+<app-select-collection-files [collectionName]="selectedCollection" [actionType]="currentScreen"
+    (returnValue)="closedCollectionNameScreen($event)"></app-select-collection-files>
+}
+
+
+<nz-dropdown-menu #collectionMenu="nzDropdownMenu">
+    <ul nz-menu>
+        <li nz-menu-item nzDisabled style="font-size: 12px; background-color: #eeedfb;">Space</li>
+        <li nz-menu-item (click)="changeScreen('createCollection')">Add Space</li>
+        @if (selectedCollection) {
+        <li nz-menu-item (click)="changeScreen('UpdateCollectionName')">Rename Space</li>
+        @if(this.activeOrgRole==='SUPER_USER'){
+            <li nz-menu-item (click)="showDeleteConfirm()">Delete Space</li>
+        }
+        
+        @if(this.selectedCollectionModule != 'docanalysis'){
+            <li nz-menu-divider></li>
+            <li nz-menu-item nzDisabled style="font-size: 12px; background-color: #eeedfb;">File</li>
+                <li nz-menu-item (click)="changeScreen('uploadFile')">Add File</li>
+            @if (files.length > 0) {
+                <li nz-menu-item (click)="changeScreen('deleteFiles')">Delete Files</li>
+                @if(this.activeOrgRole==='SUPER_USER'){
+                    <li nz-menu-item (click)="changeScreen('moveFiles')">Move file to another collection</li>
+                }
+            } @else {
+                <li nz-menu-item nzDisabled>No files available</li>
+            }
+        }
+        }@else {
+        <li nz-menu-item nzDisabled>Select a collection For more options</li>
+        }
+
+    </ul>
+</nz-dropdown-menu>

@@ -1,0 +1,79 @@
+<div class="layout">
+  <nz-content>
+    <div class="inner-content" style="margin-bottom: 20px;">
+      <div class="heading">
+        <h3><!-- <span> <span nz-icon nzType="caret-left" nzTheme="outline" (click)="collectionSelected=null"
+                    style="color: #1463db; font-size: 12px;margin-right: 5px;"></span></span> -->
+          Space Management</h3>
+        <!-- <button nz-button nzType="primary" nzSize="small" (click)="collectionSelected=null">Change
+            Space</button> -->
+      </div>
+      <nz-divider style="margin: 10px 0;"></nz-divider>
+      <nz-collapse>
+        <nz-collapse-panel [nzHeader]="headerTemplate" [nzActive]="showCollections"
+          (nzActiveChange)="toggleCollections()">
+          <ng-template #headerTemplate>
+            <div class="heading">
+              <h3>
+                Select a Space
+                <span class="spacer"></span>
+              </h3>
+            </div>
+          </ng-template>
+          <h3>
+            Public Collections
+            <button nz-button nzType="primary" nzSize="small"
+              (click)="openComponent('createCollection',null, modulesList, false)">
+              <span nz-icon nzType="folder-add" nzTheme="outline"></span> Add Space
+            </button>
+          </h3>
+          <nz-divider style="margin: 10px 0;"></nz-divider>
+          <div class="icon-app-tiles icon_wrapper" style="margin-top: 20px">
+            @for(collection of allCollectionsForAdmin;track collection.collection_name){
+            @if(!collection.is_private) {
+            <div class="icon_wrapper" (click)="openComponent('collectionView',collection, modulesList, false)">
+              <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                <div class="count">
+                  {{collection.files.length}}
+                </div>
+              </span>
+              <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+            </div>
+            }
+            }
+            @empty {
+            <nz-empty></nz-empty>
+            }
+          </div>
+          <nz-divider style="margin: 10px 0;"></nz-divider>
+          <h3>
+            Private Collections
+            <span class="spacer"></span>
+            <button nz-button nzType="primary" nzSize="small"
+              (click)="openComponent('createCollection',null, modulesList, true)">
+              <span nz-icon nzType="folder-add" nzTheme="outline"></span> Add Space
+            </button>
+          </h3>
+          <nz-divider style="margin: 10px 0;"></nz-divider>
+          <div class="icon-app-tiles icon_wrapper" style="margin-top: 20px">
+            @for(collection of allCollectionsForAdmin;track collection.collection_name){
+            @if(collection.is_private) {
+            <div class="icon_wrapper" (click)="openComponent('collectionView',collection, modulesList, true)">
+              <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                <div class="count">
+                  {{collection.files.length}}
+                </div>
+              </span>
+              <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+            </div>
+            }
+            }
+            @empty {
+            <nz-empty></nz-empty>
+            }
+          </div>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </div>
+  </nz-content>
+</div>

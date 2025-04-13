@@ -1,0 +1,102 @@
+@if(this.nzModalData.modelType==='add'){
+<div class="metaData_wrapper">
+    <div class="add_metaData_wrapper">
+        <div class="metaDataInputItem">
+            <label for="MetaData">MetaData</label>
+            <input nz-input [(ngModel)]="metaDataKey" placeholder="MetaData" />
+        </div>
+
+        <div class="metaDataInputItem">
+            <label for="" class="collection_name">Description</label>
+            <textarea nz-input [(ngModel)]="metaDataDescription" placeholder="Description" nzAutosize></textarea>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button nz-button nzType="primary" (click)="addMetaData()">Add</button>
+        </div>
+
+    </div>
+    @if(metaDataList.length>0){
+    <label>List of Metadata</label>
+    <div class="list_metadata_wrapper">
+        @for (metaData of metaDataList; track $index; let i = $index) {
+        <div class="metadata_item_wrapper">
+            <div class="content">
+                <label class="metaData" for="metaData">{{metaData.field}}</label>
+                <label class="metaDataDes" for="MetaData">{{metaData.description}}</label>
+            </div>
+            <div class="controller">
+                <span style="cursor: pointer;" nz-icon nzType="delete" nzTheme="outline"
+                    (click)="deleteMetaData(i)"></span>
+            </div>
+        </div>
+        }
+    </div>
+    <button nz-button nzType="primary" (click)="saveMetaData()">Save List</button>
+    }
+</div>
+}
+@else if (this.nzModalData.modelType==='edit') {
+<div class="metaData_wrapper">
+    <div class="add_metaData_wrapper">
+        <div class="metaDataInputItem">
+            <label for="MetaData">MetaData</label>
+            <input nz-input [(ngModel)]="metaDataKey" placeholder="MetaData" />
+        </div>
+        <div class="metaDataInputItem">
+            <label for="" class="collection_name">Description</label>
+            <textarea nz-input [(ngModel)]="metaDataDescription" placeholder="Description" nzAutosize></textarea>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button nz-button nzType="primary" (click)="updateMetaData()">Save Changes</button>
+        </div>
+    </div>
+</div>
+}
+
+@else if (this.nzModalData.modelType==='delete') {
+<div class="metaData_wrapper">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <label>List of Metadata</label>
+        <button nz-button nzType="primary" (click)="deleteMetaDataKeys()">Delete</button>
+    </div>
+
+    <div class="list_metadata_wrapper">
+        @for (metaData of metaDataListForDelete; track $index; let i = $index) {
+        <div class="metadata_item_wrapper delete">
+            <div class="controller">
+                <label nz-checkbox [(ngModel)]="metaData.isSelected"></label>
+            </div>
+            <div class="content">
+                <label class="metaData" for="metaData">{{metaData.field}}</label>
+                <label class="metaDataDes" for="MetaData">{{metaData.description}}</label>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+}
+
+@else if (this.nzModalData.modelType==='reArrange') {
+<div class="metaData_wrapper">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <label>List of Metadata</label>
+    </div>
+
+    <div cdkDropListGroup>
+        <div cdkDropList [cdkDropListData]="metaDataList" (cdkDropListDropped)="drop($event)"
+            class="list_metadata_wrapper">
+            @for (metaData of metaDataList; track $index; let i = $index) {
+            <div cdkDrag class="metadata_item_wrapper delete">
+                <div>
+                    <span nz-icon nzType="holder" nzTheme="outline" style="cursor: grab;"></span>
+                </div>
+                <div class="content">
+                    <label class="metaData" for="metaData">{{metaData.field}}</label>
+                    <label class="metaDataDes" for="MetaData">{{metaData.description}}</label>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+}

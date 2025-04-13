@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - 'yarn install'
+    build:
+      commands:
+        - 'yarn run build'
+        - 'echo "{ \"apiBaseUrl\": \"https://demo.nlightnconsulting.com/api/v1/\" }" > dist/pw-webapp/browser/assets/envconfig.json'
+  artifacts:
+    baseDirectory: dist/pw-webapp/browser
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

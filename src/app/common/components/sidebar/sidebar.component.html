@@ -1,0 +1,34 @@
+<nz-sider nzCollapsible [nzCollapsed]="(sidebarStatus$ | async)?.collapsed"
+          (nzCollapsedChange)="onCollapsedChange($event)">
+  <div class="logo"></div>
+  <ul nz-menu nzTheme="dark" nzMode="inline">
+    <li nz-menu-item [routerLink]="['/']">
+      <span nz-icon nzType="home"></span>
+      <span>Dashboard</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/docchat']">
+      <span nz-icon nzType="message"></span>
+      <span>DocChat</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/docchat']">
+      <span nz-icon nzType="dot-chart"></span>
+      <span>Data Analyzer</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/docchat']">
+      <span nz-icon nzType="read"></span>
+      <span>Digitutor</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/docchat']">
+      <span nz-icon nzType="shopping-cart"></span>
+      <span>Procurements</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/docchat']">
+      <span nz-icon nzType="file-protect"></span>
+      <span>ESG Reporting</span>
+    </li>
+    <li nz-menu-item [routerLink]="['/admin']">
+      <span nz-icon nzType="control"></span>
+      <span>Admin</span>
+    </li>
+  </ul>
+</nz-sider>

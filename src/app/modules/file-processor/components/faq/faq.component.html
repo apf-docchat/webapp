@@ -1,0 +1,46 @@
+<div class="faq_wrapper">
+    <div class="heading_wrapper">
+        <h5 style="margin: 0px;">FAQ List</h5>
+        <div class="controller_wrapper">
+            <button nz-button nzType="primary" nzSize="small" (click)="addFaqModel()">Add FAQ</button>
+            <button nz-button nzType="primary" nzSize="small" (click)="downloadFaqQuestions()">Download as CSV</button>
+        </div>
+    </div>
+    <div class="faq_list_wrapper">
+        @for(faq of faqList;track faq.faq_id){
+        <div class="faq_item">
+            <div class="faq_heading_wrapper">
+                <div class="question">{{faq.faq_question}}</div>
+                <div class="faq_controller">
+                    <button nz-button nzType="primary" nzSize="small" (click)="faq.showAnswer=!faq.showAnswer">
+                        {{faq.showAnswer?'Hide Answer':'Show Answer'}}
+                    </button>
+                    <button nz-button nzType="primary" nzSize="small" (click)="openEditModal(faq)">
+                        <span nz-icon nzType="edit" nzTheme="outline"></span>
+                    </button>
+                    <button nz-button nzType="primary" nzDanger nzSize="small" (click)="showDeleteConfirm(faq.faq_id)">
+                        <span nz-icon nzType="delete" nzTheme="outline"></span>
+                    </button>
+                </div>
+            </div>
+            @if(faq.showAnswer){
+            <div class="answer">
+                {{faq.faq_answer}}
+            </div>
+            }
+        </div>
+        }@empty {
+        <nz-empty></nz-empty>
+        }
+    </div>
+</div>
+
+<nz-modal [(nzVisible)]="showEditModal" nzTitle="Edit Question" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        <input nz-input placeholder="Question" [(ngModel)]="currentEditQuestion.faq_question" type="text" />
+    </ng-container>
+    <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" (click)="handleOk()">Save</button>
+    </div>
+</nz-modal>

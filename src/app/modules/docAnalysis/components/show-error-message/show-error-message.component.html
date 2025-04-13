@@ -1,0 +1,61 @@
+<section class="wrapper">
+
+    <div class="content_section">
+        <!-- <label for="" class="collection_name">{{files.length > 1?'Files':'File'}}</label> -->
+        @for (key of uploadMessage; track $index) {
+        <!-- <div [class]="['file_name', 'no-select',file.is_processed?'exist':'']" (click)="selectDocGuideFile($event,i)"
+            style="cursor: pointer;">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="file.isSelected" [disabled]="file.is_processed"></label>
+            <div class="name">{{file.file_name}}</div>
+        </div> -->
+        <!-- <div class="heading">{{key}}</div> -->
+        <!-- <div class="message">{{key.event}}</div>
+        <div class="message">{{key.data}}</div> -->
+        <!-- @if(key.event === 'progressEvent'){ -->
+            <div class="message" [innerHTML]="key"></div>
+        <!-- } -->
+        }
+        <div class="issues_section">
+            <nz-table #basicTable [nzData]="issues" [nzBordered]="true">
+              <thead>
+                <tr>
+                  <th>Column Name</th>
+                  <th>Row No</th>
+                  <th>Value</th>
+                  <th>Issue</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (issue of issues; track $index) {
+                  @if (issue.issues.length > 0) {
+                    @for (detail of issue.issues; track $index) {
+                      <tr>
+                        <td>{{ issue.column_name }}</td>
+                        <td>{{ detail.row_no }}</td>
+                        <td>{{ detail.value }}</td>
+                        <td>{{ detail.issue }}</td>
+                      </tr>
+                    }
+                  } @else {
+                    <tr>
+                      <td>{{ issue.column_name }}</td>
+                      <td colspan="3">No issues</td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </nz-table>
+        </div>
+        @if(!ignoreError){
+        <nz-spin nzSimple></nz-spin>
+        }
+    </div>
+    @if(ignoreError){
+    <div class="footer_section">
+        <button nz-button nzType="primary" (click)="close(false)">Correct and Upload Later</button>
+        <button nz-button nzType="primary" (click)="close(true)">Ignore Warnings and Upload Now</button>
+    </div>
+    }
+
+</section>

@@ -1,0 +1,31 @@
+@if ({
+pageAttributes: pageAttributes$ | async,
+sidebarStatus: sidebarStatus$ | async,
+};as asyncValues) {
+@if (asyncValues.pageAttributes?.['hasSidebar']) {
+@if (isLoading) {
+<section class="spinner_wrapper">
+  <nz-spin nzSimple></nz-spin>
+</section>
+}
+<nz-layout class="layout" [class.sidebar-collapsed]="asyncValues.sidebarStatus?.collapsed">
+  <app-sidebar style="background-color: #001529"></app-sidebar>
+  <nz-layout class="right-layout">
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+} @else {
+@if (isLoading) {
+<section class="spinner_wrapper">
+  <nz-spin nzSimple></nz-spin>
+</section>
+}
+<router-outlet></router-outlet>
+}
+}
+
+<!-- <button (click)="changeTheme()">change Theme</button> -->

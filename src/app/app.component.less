@@ -1,0 +1,49 @@
+.layout {
+  min-height: 100vh;
+}
+
+app-sidebar {
+  overflow: auto;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  width: 200px;
+  transition: width 0.215s ease-in-out;
+}
+
+.right-layout {
+  margin-left: 200px;
+}
+
+nz-content {
+  margin: 24px 16px 0;
+  overflow: initial;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+}
+
+.layout.sidebar-collapsed {
+  app-sidebar {
+    width: 80px;
+  }
+
+  .right-layout {
+    margin-left: 80px;
+  }
+}
+
+.spinner_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #31313152;
+}

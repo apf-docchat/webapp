@@ -1,0 +1,100 @@
+.roles-objectives-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  :host ::ng-deep .ant-card-head {
+    background-color: #f5f5f5;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  .role-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    .role-button {
+      margin-right: 10px;
+
+      button {
+        margin-bottom: 10px;
+      }
+    }
+
+    .add-role {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: var(--folder-icon-color);
+      font-size: 1.2rem;
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--highlight-background-color);
+      }
+
+      .plus-icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .role-details {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 15px;
+
+    h3 {
+      margin-top: 0;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button {
+      margin-right: 10px;
+    }
+  }
+
+  .edit-section {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+
+    nz-form-item {
+      margin-bottom: 15px;
+    }
+
+    .edit-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .add-role-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+
+    button {
+      font-size: 1rem;
+      padding: 5px 15px;
+    }
+  }
+}

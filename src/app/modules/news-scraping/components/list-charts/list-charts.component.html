@@ -1,0 +1,12 @@
+<section class="file_list_wrapper">
+    <div class="files">
+        <!-- <div class="title">
+            Analytics
+        </div> -->
+        <div class="list_wrapper">
+            @for (chartdata of chartsList; track chartdata.title;) {
+            <app-bar-graph [data]="chartdata"></app-bar-graph>
+            }
+        </div>
+    </div>
+</section>

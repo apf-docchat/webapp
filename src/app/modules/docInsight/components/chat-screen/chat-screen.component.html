@@ -1,0 +1,59 @@
+<section class="chat_wrapper">
+    <div class="chat_head">
+        <div class="title">{{collection.collection_name}}</div>
+        <div class="head_controls">
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="startNewChat()">Start new chat</button>
+        </div>
+
+    </div>
+    <div id="messagesContainer" #messagesContainer class="messages_container">
+        @for (message of messageList; track message.index) {
+        <div #chatMessage [class]="['chat_box',message?.isOwnerMe?'':'bot']">
+            <div [innerHTML]="sanitizeHtml(decodeHtml(message?.message || ''))"></div>
+            @if(message?.progress){
+            <div style="min-width: 200px;">
+                <nz-progress style="width: 100%;" [nzPercent]="message?.progress"
+                    [nzStrokeColor]="{ '0%': '#108ee9', '100%': '#87d068' }"></nz-progress>
+            </div>
+            }
+            @if(message?.metaData && message.metaData!=='[]'){
+            <button nz-button nzType="primary" [nzSize]="'small'" (click)="createComponentModal(message.metaData!)">
+                See References
+            </button>
+            }
+        </div>
+        }
+        @empty {
+        <div [class]="['chat_box','no_messages']">No Chat History</div>
+        }
+    </div>
+    @if(messageList.length>1){
+    <div class="message_option">
+        @if(currentBotChatIndex==0 && messageList[messageList.length-1].isOwnerMe === false ){
+        <button nz-button nzType="primary" (click)="retryChat()">
+            <span nz-icon nzType="undo" nzTheme="outline"></span> Retry last question
+        </button>
+        }
+        @if(currentBotChatIndex==0 && messageList[messageList.length-1].isOwnerMe === false
+        && messageList[messageList.length-1].faq_id ){
+        <button nz-button nzType="primary" (click)="improveChat(messageList[messageList.length-1].faq_id!)">
+            <span nz-icon nzType="star" nzTheme="outline"></span> Improve last question
+        </button>
+        }
+    </div>
+    }
+
+    <div class="controller">
+        <input nz-input placeholder="Type your question..." [(ngModel)]="question" type="text"
+            (keyup.enter)="sendMessage()" />
+        <button nz-button nzType="primary" [nzSize]="size" nzShape="round" [disabled]="currentBotChatIndex!==0"
+            (click)="sendMessage()">
+            @if(currentBotChatIndex==0){
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+            }@else {
+            <!-- {{remainingTime}} -->
+            <span nz-icon nzType="loading" nzTheme="outline"></span>
+            }
+        </button>
+    </div>
+</section>

@@ -1,0 +1,23 @@
+<section class="section_wrapper">
+    @if(sectionSelected != null){
+    <app-chat-screen [sectionSelected]="sectionSelected" (onNameChange)="reAssignSectionChat($event)"></app-chat-screen>
+    } @else{
+    <h4>Section Titles</h4>
+    <div class="items_wrapper">
+        @for(section of sectionsList;track section.section_id){
+        <div [class]="[
+                section.file_id===selectedIndex?'selected':'',
+                'collection_wrapper',
+                section.is_enabled?'':'disable']" (click)="onSectionSelection(section)">
+            <div style="font-size: 16px; font-weight: bold;"> {{section.section_title}}</div>
+            @if(section.section_assessment_score != null && section.section_assessment_score != 0){
+            <div style="width: 50px;min-width: 50px;">
+                <nz-progress [nzPercent]="section.section_assessment_score" [nzShowInfo]="false"></nz-progress>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    }
+</section>

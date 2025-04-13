@@ -1,0 +1,20 @@
+<section class="file_list_wrapper">
+    <button nz-button nzType="primary">Upload PDF</button>
+    <div class="files">
+        <label class="title" for="uploadedFiles">Uploaded Files</label>
+        <div class="list_wrapper">
+            @for (collectionList of uploadedFileList; track collectionList.collection_name;) {
+            <div class="collection_wrapper">
+                <div class="collection_title">{{collectionList.collection_name}}</div>
+                @for (item of collectionList.files; track item.file_id;) {
+                <label for="item" nz-tooltip [nzTooltipTitle]="item.file_name"
+                    [className]="item.file_id===selectedIndex?'selected':''">
+                    {{item.file_name}}
+                </label>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+</section>

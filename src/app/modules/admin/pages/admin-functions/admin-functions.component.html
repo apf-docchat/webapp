@@ -1,0 +1,314 @@
+<div class="admin-functions">
+  <nz-layout>
+    <!-- <nz-header class="header-content">
+      <div>
+        <h1>System Admin</h1>
+      </div>
+    </nz-header> -->
+    <app-header></app-header>
+    <nz-content>
+      <div class="content-wrapper">
+        <h3>System Admin</h3>
+        <nz-tabset nzType="card">
+          <nz-tab nzTitle="Organizations">
+            <div class="tab-content">
+              <button nz-button nzType="primary" (click)="openCreateOrganizationModal()">Create Organization</button>
+              <nz-table #orgTable [nzData]="organizationList" [nzBordered]="true">
+                <thead>
+                  <tr>
+                    <th nzWidth="20%">Organization Name</th>
+                    <th nzWidth="20%">Module List</th>
+                    <!-- <th nzWidth="40%">Actions</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (org of orgTable.data; track org.organization_id) {
+                    <tr>
+                      <td>
+                        <input nz-input [(ngModel)]="org.organization_name" placeholder="Enter Org Name"/>
+                        <button nz-button nzType="default" nzDanger (click)="saveOrgName(org.organization_id)">Save</button>
+                      </td>
+                      <td>
+                        <input nz-input [(ngModel)]="org.moduleList" placeholder="Enter Module IDs"/>
+                        <button nz-button nzType="default" nzDanger (click)="saveModuleList(org.organization_id)">Save</button>
+                      </td>                      
+                      <!-- <td>
+                        <button nz-button nzType="default" (click)="openEditOrganizationModal(org)">Edit</button>
+                        <button nz-button nzType="default" nzDanger (click)="deleteOrganization(org.organization_id)">Delete</button>
+                      </td> -->
+                    </tr>
+                  }
+                </tbody>
+              </nz-table>
+            </div>
+          </nz-tab>
+          <nz-tab nzTitle="Users">
+            <div class="tab-content">
+              <button nz-button nzType="primary" (click)="openCreateUserModal()">Create User</button>
+              <nz-table #userTable [nzData]="userList" [nzBordered]="true">
+                <thead>
+                  <tr>
+                    <th nzWidth="20%">User Name</th>
+                    <th nzWidth="20%">Email</th>
+                    <!-- <th nzWidth="20%">Organizations</th>
+                    <th nzWidth="20%">Role</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of userTable.data; track user.user_id) {
+                    <tr>
+                      <td>
+                        <input nz-input [(ngModel)]="user.username" placeholder="Enter Username"/>
+                        <button nz-button nzType="default" nzDanger (click)="saveUserName(user.user_id)">Save</button>
+                      </td>
+                      <td>
+                        <input nz-input [(ngModel)]="user.email" placeholder="Enter Email"/>
+                        <button nz-button nzType="default" nzDanger (click)="saveEmail(user.user_id)">Save</button>
+                      </td>
+                      <!-- <td>
+                        <nz-select [(ngModel)]="user.organizations" nzMode="multiple" nzPlaceHolder="Select Organizations">
+                          @for (org of organizationList; track org.organization_id) {
+                            <nz-option [nzValue]="{ organization_id: org.organization_id, role: 'MEMBER' }" [nzLabel]="org.organization_name"></nz-option>
+                          }
+                        </nz-select>
+                        <button nz-button nzType="default" nzDanger (click)="saveUserOrganizations(user.id)">Save</button>
+                      </td>
+                      <td>
+                        <nz-select [(ngModel)]="user.organizations" nzMode="multiple" nzPlaceHolder="Select Role">
+                          <nz-option nzValue="MEMBER" nzLabel="MEMBER"></nz-option>
+                          <nz-option nzValue="SUPER_USER" nzLabel="SUPER_USER"></nz-option>
+                        </nz-select>
+                      </td> -->
+                    </tr>
+                  }
+                </tbody>
+              </nz-table>
+            </div>
+          </nz-tab>
+          <nz-tab nzTitle="User Tickets">
+            <div class="tab-content">
+              <div class="filter-section">
+                <nz-select [(ngModel)]="selectedStatus" (ngModelChange)="filterIssues()" nzPlaceHolder="Select Status">
+                  <nz-option nzValue="" nzLabel="All"></nz-option>
+                  <nz-option nzValue="Open" nzLabel="Open"></nz-option>
+                  <nz-option nzValue="Closed" nzLabel="Closed"></nz-option>
+                </nz-select>
+              </div>
+              <nz-table #userIssueTable [nzData]="filteredUserIssueList" [nzBordered]="true">
+                <thead>
+                  <tr>
+                    <th nzWidth="10%">Ticket Number</th>
+                    <th nzWidth="10%">Title</th>
+                    <th nzWidth="10%">Description</th>
+                    <th nzWidth="10%">Status</th>
+                    <th nzWidth="10%">Thread ID</th>
+                    <th nzWidth="10%">Username</th>
+                    <th nzWidth="10%">Collection ID</th>
+                    <th nzWidth="30%">Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for(userIssue of userIssueTable.data; track userIssue.id) {
+                    <tr>
+                      <td>{{ userIssue.ticket_number }}</td>
+                      <td>{{ userIssue.title }}</td>
+                      <td>{{ userIssue.description }}</td>
+                      <td>
+                        <nz-select [(ngModel)]="userIssue.status">
+                          <nz-option nzValue="Open" nzLabel="Open"></nz-option>
+                          <nz-option nzValue="Closed" nzLabel="Closed"></nz-option>
+                        </nz-select>
+                      </td>
+                      <td (click)="showChatLog(userIssue.thread_id)">{{ userIssue.thread_id }}</td>
+                      <td>{{ userIssue.username }}</td>
+                      <td>{{ userIssue.collection_id }}</td>
+                      <td>
+                        <input nz-input [(ngModel)]="userIssue.remarks" placeholder="Enter remarks" />
+                      </td>
+                      <td>
+                        <button nz-button nzType="primary" (click)="saveIssue(userIssue, userIssue.id)">Save</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </nz-table>
+
+              <!-- Chat Log Table -->
+              @if(chatLog.length > 0) {
+                <nz-table [nzData]="chatLog" [nzBordered]="true" class="chat-log-table">
+                  <thead>
+                    <tr>
+                      <th nzWidth="20%">Role</th>
+                      <th nzWidth="80%">Content</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for(message of chatLog; track message) {
+                      <tr>
+                        <td>{{ message.role }}</td>
+                        <td [innerHTML]="sanitizeHtml(decodeHtml(message.content))"></td>
+                      </tr>
+                    }
+                  </tbody>
+                </nz-table>
+              }
+            </div>
+          </nz-tab>
+          <nz-tab nzTitle="Prompts">
+            <div class="tab-content">
+              <label>Prompt Type:</label>
+              <nz-select [(ngModel)]="selectedPromptType" nzPlaceHolder="Select Prompt Type" (ngModelChange)="filterPrompts()">
+                @for (type of promptTypes; track type) {
+                  <nz-option [nzValue]="type" [nzLabel]="type"></nz-option>
+                }
+              </nz-select>
+              @for (prompt of filteredPrompts; track prompt.id) {
+                <div style="margin-bottom: 15px;">
+                <nz-card>
+                  <div class="card-content">
+                  <div  class="form-row">
+                    <label>ID: {{ prompt.id }}</label>
+                  </div>
+                  <div  class="form-row">
+                    <label for="promptName">Prompt Name:</label>
+                    <input nz-input [(ngModel)]="prompt.prompt_name" id="promptName" placeholder="Enter Prompt Name" style="width: 280px;"/>
+                  </div>
+                  <div  class="form-row">
+                    <label for="nameLabel">Name Label:</label>
+                    <input nz-input [(ngModel)]="prompt.name_label" id="nameLabel" placeholder="Enter Name Label" style="width: 280px;"/>
+                  </div>
+                  <div  class="form-row">
+                    <label for="promptText">Prompt Text:</label>
+                    <textarea nz-input [(ngModel)]="prompt.prompt_text" id="promptText" placeholder="Enter Prompt Text" rows="12" cols="40"></textarea>
+                  </div>
+                  <div  class="form-row">
+                    <label for="description">Description:</label>
+                    <textarea nz-input [(ngModel)]="prompt.description" id="description" placeholder="Enter Description" rows="3" cols="40"></textarea>
+                  </div>
+                  <button nz-button nzType="primary" (click)="savePrompt(prompt.id)">Save</button>
+                <div class="form-row">
+                  <nz-select [(ngModel)]="selectedArchivedPrompt[prompt.id]" nzPlaceHolder="Select Archived Prompt" (ngModelChange)="viewArchivedPrompt(prompt.id)">
+                    @for (archived of prompt.archivedPrompts; track archived) {
+                      <nz-option [nzValue]="archived" [nzLabel]="archived.datetime_created"></nz-option>
+                    }
+                  </nz-select>
+                </div>
+                @if (archivedPrompt[prompt.id]) {
+                  <div class="archived-prompt">
+                    <div class="form-row">
+                      <label>ID: {{ archivedPrompt[prompt.id].id }}</label>
+                    </div>
+                    <div class="form-row">
+                      <label>Prompt ID: {{ archivedPrompt[prompt.id].prompt_id }}</label>
+                    </div>
+                    <div class="form-row">
+                      <label for="archivedPromptName">Prompt Name:</label>
+                      <input nz-input [ngModel]="archivedPrompt[prompt.id].prompt_name" id="archivedPromptName" readonly style="width: 280px;"/>
+                    </div>
+                    <div class="form-row">
+                      <label for="archivedNameLabel">Name Label:</label>
+                      <input nz-input [ngModel]="archivedPrompt[prompt.id].name_label" id="archivedNameLabel" readonly style="width: 280px;"/>
+                    </div>
+                    <div class="form-row">
+                      <label for="archivedPromptText">Prompt Text:</label>
+                      <textarea nz-input [ngModel]="archivedPrompt[prompt.id].prompt_text" id="archivedPromptText" readonly rows="12" cols="40"></textarea>
+                    </div>
+                    <div class="form-row">
+                      <label for="archivedDescription">Description:</label>
+                      <textarea nz-input [ngModel]="archivedPrompt[prompt.id].description" id="archivedDescription" readonly rows="3" cols="40"></textarea>
+                    </div>
+                  </div>
+                }
+                </div>
+                </nz-card>
+                </div>
+              }
+            </div>
+          </nz-tab>
+          <nz-tab nzTitle="Dashboard">
+            <div class="tab-content">
+              <nz-table #orgTable [nzData]="organizationList" [nzBordered]="true">
+                <thead>
+                  <tr>
+                    <th nzWidth="50%">Organization Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (org of orgTable.data; track org.organization_id) {
+                    <tr>
+                      <td>
+                        <input nz-input [(ngModel)]="org.organization_name" placeholder="Enter Org Name"/>
+                        <button nz-button nzType="default" nzDanger (click)="populateDashboard(org)">Populate Dashboard</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </nz-table>
+            </div>
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </nz-content>
+  </nz-layout>
+
+  <!-- Template for Create Organization Modal -->
+  <ng-template #createOrganizationTemplate>
+    <div>
+      <label for="orgName">Organization Name:</label>
+      <input nz-input [(ngModel)]="orgName" id="orgName" placeholder="Enter Org name"/>
+    </div>
+  </ng-template>
+  <!-- Template for Create User Modal -->
+<ng-template #createUserTemplate>
+  <div style="display: grid;">
+    <label for="userName">User Name:</label>
+    <input nz-input [(ngModel)]="userName" id="userName" placeholder="Enter User name" />
+
+    <label for="userEmail">Email:</label>
+    <input nz-input [(ngModel)]="userEmail" id="userEmail" placeholder="Enter User email" />
+
+    <label for="userPassword">Password:</label>
+    <input nz-input [(ngModel)]="userPassword" id="userPassword" type="password" placeholder="Enter User password" />
+
+    <!-- <label for="userOrganizations">Organizations:</label>
+    <nz-select [(ngModel)]="userOrganizations" id="userOrganizations" nzMode="multiple" nzPlaceHolder="Select organizations">
+      <nz-option *ngFor="let org of organizationList" [nzValue]="org.organization_id" [nzLabel]="org.organization_name"></nz-option>
+    </nz-select> -->
+
+    <!-- <label for="userRole">Role:</label>
+    <nz-select [(ngModel)]="userRole" id="userRole" nzPlaceHolder="Select role">
+      <nz-option nzValue="MEMBER" nzLabel="MEMBER"></nz-option>
+      <nz-option nzValue="SUPER_USER" nzLabel="SUPER_USER"></nz-option>
+    </nz-select> -->
+  </div>
+</ng-template>
+</div>
+
+
+<!-- User CRUD - can be brought in later if needed
+<nz-tab nzTitle="Users">
+  <div class="tab-content">
+    <button nz-button nzType="primary" (click)="openCreateUserModal()">Create User</button>
+    <nz-table #userTable [nzData]="userList" [nzBordered]="true">
+      <thead>
+        <tr>
+          <th nzWidth="20%">User Name</th>
+          <th nzWidth="20%">Email</th>
+          <th nzWidth="20%">Role</th>
+          <th nzWidth="40%">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of userTable.data">
+          <td>{{ user.user_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <button nz-button nzType="default" (click)="openEditUserModal(user)">Edit</button>
+            <button nz-button nzType="default" nzDanger (click)="deleteUser(user.user_id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-tab> -->

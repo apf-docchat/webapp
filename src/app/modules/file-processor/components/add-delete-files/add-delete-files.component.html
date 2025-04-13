@@ -1,0 +1,89 @@
+<section class="wrapper">
+    @if(showSection==='add'){
+    <h5>{{nzModalData.dataAsString==='add'?'Collection List':'Doc file List'}}</h5>
+    }
+
+    @if(showSection==='add'){
+    <div class="top_section">
+        <div class="input_section">
+            <nz-select [(ngModel)]="selectedCollection" (ngModelChange)="onCollectionChange()" nzShowSearch nzAllowClear
+                nzPlaceHolder="collections" class="selector">
+                @for (item of collectionList; track item.collection_name) {
+                <nz-option [nzLabel]="item.collection_name" [nzValue]="item.collection_name"></nz-option>
+                }
+            </nz-select>
+        </div>
+        <button nz-button nzType="primary" (click)="submitButton()">
+            Add
+        </button>
+    </div>
+    <div class="content_section">
+        <label for="" class="collection_name">{{files.length > 1?'Files':'File'}}</label>
+
+        @for (file of fileSelectionList; track file.file_id; let i = $index) {
+        <div [class]="['file_name', 'no-select',file.is_processed?'exist':'']" (click)="selectFile($event,i)"
+            style="cursor: pointer;">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="file.isSelected" [disabled]="file.is_processed"></label>
+            <div class="name">{{file.file_name}}</div>
+        </div>
+        }
+        @empty {
+        <nz-empty></nz-empty>
+        }
+    </div>
+    }
+
+    @if(showSection === 'delete'){
+    <div class="top_section">
+
+        <div style="width: 100%;">DocGuide file List</div>
+        <button nz-button nzType="primary" (click)="submitButton()" nzDanger>
+            Delete
+        </button>
+    </div>
+    <div class="content_section">
+        <label for="" class="collection_name">{{files.length > 1?'Files':'File'}}</label>
+
+        @for (file of docGuideFileSelectionList; track file.file_id; let i = $index) {
+        <div [class]="['file_name', 'no-select',file.is_processed?'exist':'']" (click)="selectDocGuideFile($event,i)"
+            style="cursor: pointer;">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="file.isSelected" [disabled]="file.is_processed"></label>
+            <div class="name">{{file.file_name}}</div>
+        </div>
+        }
+        @empty {
+        <nz-empty></nz-empty>
+        }
+    </div>
+    }
+    @if(showSection === 'confirm'){
+    @if(nzModalData.dataAsString==='add'){
+    <div class=" confirm_wrapper">
+        <p>Are you sure you want to add the selected files to DocGuide module?</p>
+        <div style="display: flex; justify-content: flex-end;gap: 5px;">
+            <button nz-button nzType="default" (click)="onConfirm(false)">
+                Cancel
+            </button>
+            <button nz-button nzType="primary" (click)="onConfirm(true)">
+                Add
+            </button>
+        </div>
+    </div>
+    }
+    @if(nzModalData.dataAsString==='delete'){
+    <div class=" confirm_wrapper">
+        <p>Are you sure you want to delete the selected files from DocGuide module?</p>
+        <div style="display: flex; justify-content: flex-end;gap: 5px;">
+            <button nz-button nzType="default" (click)="onConfirm(false)">
+                Cancel
+            </button>
+            <button nz-button nzType="primary" (click)="onConfirm(true)" nzDanger>
+                Delete
+            </button>
+        </div>
+    </div>
+    }
+    }
+</section>

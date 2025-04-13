@@ -1,0 +1,182 @@
+<nz-layout class="layout">
+  <nz-header>
+    <div nz-row style="align-items: center;">
+      <div style="display: flex;">
+        @if (logoUrl !== '') {
+          <div class="header-logo">
+            <a [routerLink]="['/']" style="font-weight: 600;">
+              <img [ngSrc]="logoUrl" width="75" height="40" priority="true" alt="DocChat Logo"
+                class="app-logo" />
+            </a>
+          </div>
+        }
+      </div>
+      <div style="flex: 1 1 auto;"></div>
+      <div>
+        <app-user-nav></app-user-nav>
+      </div>
+    </div>
+  </nz-header>
+  <nz-tabset>
+    <nz-tab nzTitle="Spaces">
+      <nz-content style="padding-bottom: 20px;">
+        <div class="inner-content">
+          <div class="spaces-container">
+            <div class="team-spaces">
+              <h2>Team Spaces</h2>
+              <p class="subtitle">Select a Space to continue</p>
+              <div class="card-list">
+                @for(org of organizationList; track org.organization_id) {
+                  @for(collection of allCollectionList[org.organization_id]; track collection.collection_id) {
+                    @if(!collection.is_private) {
+                      <nz-card class="space-card" (click)="selectCollection(org.organization_id, collection)">
+                        <nz-card-meta
+                          [nzAvatar]="avatarTemplate"
+                          nzTitle="{{ collection.collection_name }}"
+                          nzDescription="{{ collection.collection_description }}">
+                        </nz-card-meta>
+                        <ng-template #avatarTemplate>
+                          <nz-avatar nzIcon="folder" nzSize="large" nzShape="square" style="background-color: var(--folder-icon-color)"></nz-avatar>
+                        </ng-template>
+                        <div class="card-footer">
+                          <span nz-icon nzType="file" nzTheme="outline"></span>
+                          <span>{{ collection.files.length }} files</span>
+                        </div>
+                      </nz-card>
+                    }
+                  }
+                }
+                <nz-card class="space-card" (click)="openComponent('createCollection',null, modulesList, false, false, null)">
+                  <div class="add-insight">
+                    <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon"></i>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+            <div class="private-spaces">
+              <h2>Private Spaces</h2>
+              <p class="subtitle">Your private collections</p>
+              <div class="card-list">
+                @for(org of organizationList; track org.organization_id) {
+                  @for(collection of allCollectionList[org.organization_id]; track collection.collection_id) {
+                    @if(collection.is_private) {
+                      <nz-card class="space-card" (click)="selectCollection(org.organization_id, collection)">
+                        <nz-card-meta
+                        [nzAvatar]="avatarTemplate"
+                          nzTitle="{{ collection.collection_name }}"
+                          nzDescription="{{ collection.collection_description }}">
+                        </nz-card-meta>
+                        <ng-template #avatarTemplate>
+                          <nz-avatar nzIcon="folder" nzSize="large" nzShape="square" style="background-color:  var(--folder-icon-color)"></nz-avatar>
+                        </ng-template>
+                        <div class="card-footer">
+                          <span nz-icon nzType="file" nzTheme="outline"></span>
+                          <span>{{ collection.files.length }} files</span>
+                        </div>
+                      </nz-card>
+                    }
+                  }
+                }
+                <nz-card class="space-card" (click)="openComponent('createCollection',null, modulesList, true, false, null)">
+                  <div class="add-insight">
+                    <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon"></i>
+                  </div>
+                </nz-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nz-content>
+    </nz-tab>
+    <nz-tab nzTitle="Agents">
+      <app-jobs-page></app-jobs-page>
+    </nz-tab>
+    <nz-tab nzTitle="Admin">
+      <collection-mgmt></collection-mgmt>
+    </nz-tab>
+  </nz-tabset>
+</nz-layout>
+<!-- <nz-layout class="layout">
+  <nz-header>
+    <div nz-row style="align-items: center;">
+      <div style="display: flex;">
+        @if (logoUrl !== '') {
+          <div class="header-logo">
+            <a [routerLink]="['/']" style="font-weight: 600;">
+              <img [ngSrc]="logoUrl" width="75" height="40" priority="true" alt="DocChat Logo"
+                class="app-logo" />
+            </a>
+          </div>
+        }
+      </div>
+      <div style="flex: 1 1 auto;"></div>
+      <div>
+        <app-user-nav></app-user-nav>
+      </div>
+    </div>
+  </nz-header>
+  <nz-content style="padding-bottom: 20px;">
+    <div class="inner-content">
+      <div>
+        <h2>Team Spaces</h2>
+      </div>
+      <div>
+        <p style="color: #585858;">Select a Space continue</p>
+      </div>
+      <div class="app-tiles" style="margin-top: 10px">
+        @for(org of organizationList;track org.organization_id){
+        <div [class]="['org_wrapper',org.organization_id === activeOrg ? 'active':'']">
+          <label for="" [class]="[org.organization_id === activeOrg ? 'active':'']">{{org.organization_name}}</label>
+          <button nz-button nzType="primary" nzSize="small"
+            (click)="openComponent('createCollection',null, modulesList, false, org.organization_id)">
+            <span nz-icon nzType="folder-add" nzTheme="outline"></span> New Space
+          </button>
+        </div>
+        <div class="icon-app-tiles" style="margin-top: 20px">
+          @for(collection of allCollectionList[org.organization_id]; track collection.collection_id){
+            @if(!collection.is_private) {
+            <div class="icon_wrapper" (click)="selectCollection(org.organization_id, collection)">
+              <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                <div class="count">
+                  {{collection.files.length}}
+                </div>
+              </span>
+              <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+              <em class="collection_description">{{collection.collection_description}}</em>
+            </div>
+            }
+          }
+          @empty {
+          <nz-empty></nz-empty>
+          }
+        </div>
+        }
+      </div>
+      <nz-divider style="margin: 10px 0;"></nz-divider>
+      <h3>Private Spaces
+        <span class="spacer"></span>
+        <button nz-button nzType="primary" nzSize="small"
+          (click)="openComponent('createCollection',null, modulesList, true)">
+          <span nz-icon nzType="folder-add" nzTheme="outline"></span> New Space
+        </button>
+      </h3>
+      <div class="icon-app-tiles" style="margin-top: 20px">
+        @for(org of organizationList;track org.organization_id){
+          @for(collection of allCollectionList[org.organization_id]; track collection.collection_id){
+            @if(collection.is_private) {
+              <div class="icon_wrapper" (click)="selectCollection(org.organization_id, collection)">
+                <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                  <div class="count">
+                    {{collection.files.length}}
+                  </div>
+                </span>
+                <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+                <em class="collection_description">{{collection.collection_description}}</em>
+              </div>
+            }
+          }
+        }
+      </div>
+    </div>    
+  </nz-content>
+</nz-layout> -->

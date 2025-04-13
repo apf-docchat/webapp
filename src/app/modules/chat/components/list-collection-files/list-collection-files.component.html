@@ -1,0 +1,37 @@
+<section class="file_list_wrapper">
+    <div class="files">
+        <label class="title" for="uploadedFiles">Space Files/Tables</label>
+        <div class="list_wrapper">
+            <!-- @for (file of collectionSelected.files; track file.file_id;) { -->
+            <div class="collection_wrapper">
+                <div class="collection_title">
+                    {{collectionSelected.collection_name}}
+                    @if (collectionSelected.files.length > 0) {
+                        <span nz-icon nzType="download" nzTheme="outline" class="download-icon"
+                        (click)="downloadCollection(collectionSelected)"></span>
+                    }
+                </div>
+                @for (item of collectionSelected.files; track item.file_id;) {
+                <div class="file_item">
+                    <label for="item" nz-tooltip [nzTooltipTitle]="item.file_name">
+                        {{item.file_name}}
+                    </label>
+                    <span nz-icon nzType="download" nzTheme="outline" class="download-icon"
+                        (click)="downloadFile(item.file_id)"></span>
+                </div>
+                }
+                @for (item of collectionSelected.tables; track $index;) {
+                    <div class="file_item">
+                        <label for="item" nz-tooltip [nzTooltipTitle]="item.table_name">
+                            {{ellipsisStringToHaveOnlyMax20Chars(item.table_name) }}
+                        </label>
+                        <span nz-icon nzType="eye" nzTheme="outline" class="eye-icon"
+                        (mouseenter)="showColumns(collectionSelected.collection_id, item.table_name)" nz-tooltip [nzTooltipTitle]="columnListTooltip"
+                        nzTooltipPlacement="left"></span>
+                    </div>
+                    }
+            </div>
+            <!-- } -->
+        </div>
+    </div>
+</section>

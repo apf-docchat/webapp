@@ -1,0 +1,45 @@
+<section class="ra_wrapper">
+
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3>
+                    Prompt Files
+                </h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <nz-collapse style="background-color: #cedaff00;">
+                @for (panel of panels; track panel) {
+                <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled"
+                    [style]="panel.customStyle">
+                    @if(panel.name==='docchat_prompts.json'){
+                    <div style="display: flex; flex-direction: column; gap:5px;">
+                        <h5 style="margin: 0px;">
+                            This prompt is used to categorise the User query into one of these 4
+                            types of queries. The approach used to use AI and vector DB depends on the type of User
+                            query. Currently 4 types of queries are being categorised and the subsequent code does
+                            different things in different cases. Examples: 1. for Search type of query use Pinecone and
+                            RAG. 2. For whole doc queries if possible send the whole doc to AI. etc.
+                        </h5>
+                        <textarea nz-input [nzAutosize]="{ minRows: 5, maxRows: 10 }" [(ngModel)]="textdata"></textarea>
+                        <nz-divider></nz-divider>
+                        <h5 style="margin: 0px;">
+                            This prompt is used to categorise the User query into one of these 4
+                            types of queries. The approach used to use AI and vector DB depends on the type of User
+                            query. Currently 4 types of queries are being categorised and the subsequent code does
+                            different things in different cases. Examples: 1. for Search type of query use Pinecone and
+                            RAG. 2. For whole doc queries if possible send the whole doc to AI. etc.
+                        </h5>
+                        <textarea nz-input [nzAutosize]="{ minRows: 5, maxRows: 10 }" [(ngModel)]="textdata"></textarea>
+                        <div style="display: flex;flex-wrap: wrap; gap: 5px;">
+
+                            <button nz-button nzType="primary">Save</button>
+                        </div>
+                    </div>
+                    }
+                </nz-collapse-panel>
+                }
+            </nz-collapse>
+        </div>
+    </div>
+</section>

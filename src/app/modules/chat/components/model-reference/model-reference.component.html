@@ -1,0 +1,13 @@
+<section>
+    <nz-tabset style="height:auto;" [nzTabPosition]="nzTabPosition" [(nzSelectedIndex)]="selectedIndex">
+        @for (tab of tabs; track $index) {
+        <nz-tab [nzTitle]="tab.name">
+            <div class="tab_wrapper">
+                <div class="title"> {{tab.content.filename}}</div>
+                <nz-divider></nz-divider>
+                <div class="content">{{tab.content.text}}</div>
+            </div>
+        </nz-tab>
+        }
+    </nz-tabset>
+</section>

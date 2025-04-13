@@ -1,0 +1,40 @@
+.file_list_wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  gap: 10px;
+  overflow: auto;
+
+  @media (min-width: 1366px) {
+    width: 100%;
+    max-width: 1000px;
+  }
+  .files {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+    border-radius: 10px;
+
+    max-height: calc(100vh - 110px);
+    .title {
+      font-weight: bold;
+      border-bottom: 1px solid #bcbcbc;
+      position: sticky;
+      top: 0px;
+      background-color: white;
+      opacity: 0.8;
+    }
+    .list_wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      app-news-card {
+        &:last-child {
+          margin-bottom: 7px;
+        }
+      }
+    }
+  }
+}

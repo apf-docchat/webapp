@@ -1,0 +1,94 @@
+<section class="chat_wrapper">
+    <div class="chat_head">
+        <div class="title">{{file.file_name}}</div>
+        <div class="head_controls">
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="startNewChat()">New chat</button>
+            <!-- <button nz-button [nzSize]="'small'" nzType="primary" (click)="downloadFile(file.file_url)">
+                Download File
+            </button> -->
+        </div>
+        <!-- <div class="head_controls">
+            <button nz-button [nzSize]="'small'" nzType="primary" (click)="downloadFile(file.file_url)">
+                Download File
+            </button>
+        </div> -->
+    </div>
+    <!-- <nz-tabset>
+        <nz-tab nzTitle="Default Chat">
+            <div class="tab_content"> -->
+            <div id="messagesContainer" #messagesContainer class="messages_container">
+                @for (message of messageList; track message.index) {
+                <div class="message_container">
+                    <div id="chatMessage" #chatMessage
+                        [class]="['chat_box',message?.isOwnerMe?'':'bot',message.table? 'table':'']">
+                        @if(message?.message != '' && message?.message != undefined) {
+                            <div [innerHTML]="message?.message"></div>
+                        } 
+                        @if (message?.image_data != '' && message?.image_data != undefined) {
+                            <div>
+                                <img [src]="'data:image/png;base64,' + message.image_data" alt="Image response"  style="width: 100%;" />
+                            </div>
+                        }
+                        @if(message?.progress){
+                        <div style="min-width: 200px;">
+                            <nz-progress style="width: 100%;" [nzPercent]="message?.progress"
+                                [nzStrokeColor]="{ '0%': '#108ee9', '100%': '#87d068' }"></nz-progress>
+                        </div>
+                        }
+                        @if(message?.metaData && message.metaData!=='[]'){
+                        <button nz-button nzType="primary" [nzSize]="'small'" (click)="createComponentModal(message.metaData!)">
+                            See References
+                        </button>
+                        }
+                    </div>
+                </div>
+                }
+                @empty {
+                @if(chatInstructionsList.length==0){
+                    <div [class]="['chat_box','no_messages']">
+                        No Chat History
+                        @for(instruction of chatInstructionsList; track $index){
+                        <div>{{instruction}}</div>
+                        }
+                    </div>
+                }
+                }
+            </div>
+            @if(messageList.length==0 && chatInstructionsList.length>0){
+                <div class="chat_instruction">
+                    <div class="card">
+                        <div class="title">Hi there! For better experience, please follow these instructions:</div>
+                        <div class="content">
+                            <ul>
+                                @for(instruction of chatInstructionsList; track $index){
+                                <li>{{instruction}}</li>
+                                }
+                            </ul>
+            
+                        </div>
+                    </div>
+                </div>
+            }            
+            <!-- </div>
+        </nz-tab>
+        <nz-tab nzTitle="Research Template 1">
+          Coming up
+        </nz-tab>
+        <nz-tab nzTitle="Research Template 2">
+            Coming up
+        </nz-tab>
+    </nz-tabset> -->
+    <div class="controller">
+        <input nz-input placeholder="Type your question..." [(ngModel)]="question" type="text"
+            (keyup.enter)="sendMessage()" />
+        <button nz-button nzType="primary" [nzSize]="size" nzShape="round" [disabled]="currentBotChatIndex!==0"
+            (click)="sendMessage()">
+            @if(currentBotChatIndex==0){
+            <span nz-icon nzType="send" nzTheme="outline"></span>
+            }@else {
+            <!-- {{remainingTime}} -->
+            <span nz-icon nzType="loading" nzTheme="outline"></span>
+            }
+        </button>
+    </div>
+</section>

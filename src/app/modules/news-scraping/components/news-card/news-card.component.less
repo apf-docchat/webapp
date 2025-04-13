@@ -1,0 +1,42 @@
+.card_wrapper {
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+
+  background-color: #f0f8ff5e;
+  backdrop-filter: blur(2px);
+  border: 1px solid #e5e5f75f;
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
+
+  //   cursor: pointer;
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .content {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    line-height: 15px;
+    text-transform: lowercase;
+  }
+
+  .controls {
+    margin-top: 5px;
+    border-top: 1px solid #00000017;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .open_link {
+      color: #2680f8c9;
+      cursor: pointer;
+    }
+  }
+}

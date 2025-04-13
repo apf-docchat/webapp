@@ -1,0 +1,274 @@
+<!-- <div class="job-blocks">
+  <nz-row [nzGutter]="16">
+    @for(job of jobs | keyvalue; track job.key) {
+    <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" class="job-col">
+
+      <div class="job-block-content">
+        <nz-collapse (click)="onJobClick(job.value.job_collection_id)">
+          <nz-collapse-panel nzHeader="{{ job.value.title }}" [nzActive]="false" [nzExtra]="closeIcon">
+        @if(job.value.dataLoading) {
+        <nz-spin [nzSize]="'large'"></nz-spin>
+        } @else {
+        <form [formGroup]="jobsForm[job.key]">
+          <label>Space ID</label>
+          <nz-select formControlName="job_collection_id" nzPlaceHolder="Select space">
+            @for(collection of allCollections; track collection.collection_id) {
+            <nz-option [nzValue]="collection.collection_id" [nzLabel]="collection.collection_name"></nz-option>
+            }
+          </nz-select>
+          <label>Query</label>
+          <textarea nz-input formControlName="query" placeholder="What do you want do?" rows="4"></textarea>
+          <button nz-button nzType="primary" (click)="createSteps(job.key)">Generate with AI</button>
+          <div>
+            <label>API Endpoint url (https://api-baseurl/functions)</label>
+            <input nz-input formControlName="api_endpoint" placeholder="/api-name" />
+          </div>
+        </form>
+        <div class="job-steps">
+          @if(stepsForm[job.key]) {
+          <form [formGroup]="stepsForm[job.key]">
+            <label>Input Parameters (OPTIONAL, not saved, enter for each Run, refer as $input_params where needed)</label>
+            <textarea nz-input [(ngModel)]="jobInputsMap[job.key]" [ngModelOptions]="{standalone: true}" placeholder="Input params if any" rows="4"></textarea>
+            <label>Steps</label>
+            <div formArrayName="steps">
+              @for(step of getStepsFormArray(job.key).controls; track $index) {
+              <div [formGroupName]="$index" class="step-form-group">
+                <input nz-input type="hidden" formControlName="step_type" placeholder="file_processing"
+                  value="file_processing" />
+                <label>Input Context</label>
+                <nz-select formControlName="file_category" nzPlaceHolder="Enter file category">
+                  <nz-option nzValue='TEXT_FILES' nzLabel='TEXT FILES'></nz-option>
+                  <nz-option nzValue='SPREADSHEET_FILES' nzLabel='SPREADSHEET FILES'></nz-option>
+                  <nz-option nzValue='PREVIOUS_OUTPUT' nzLabel='PREVIOUS OUTPUT'></nz-option>
+                </nz-select>
+                <div class="filter-item">
+                  <label for="filteredFile">Filter Files</label>
+                  <nz-select id="filteredFile" nzPlaceHolder="Select file" formControlName="selected_file_ids"
+                  nzMode="multiple"
+                  class="file-select">
+                      @for(file of fileList; track file.file_id) {
+                          <nz-option [nzValue]="file.file_id" [nzLabel]="file.file_name"></nz-option>
+                      }
+                  </nz-select>
+                  </div>
+
+                  <div class="filter-item">
+                    <label for="toolList">Choose the Tool</label>
+                    <nz-select id="toolList" nzPlaceHolder="Choose a Tool" formControlName="tool_id"
+                    class="file-select">
+                        @for(tool of toolList; track tool.tool_id) {
+                            <nz-option [nzValue]="tool.tool_id" [nzLabel]="tool.tool_name"></nz-option>
+                        }
+                    </nz-select>
+                    </div>
+                <label>Describe the Process to be done on the Input</label>
+                <textarea nz-input formControlName="prompt" placeholder="What process to do..." rows="4"></textarea>
+
+                <label>Output Format</label>
+                <input nz-input formControlName="output_format" placeholder="Eg: Share in HTML format" />
+
+                <div class="job-block-output">
+                  <label>Output of the Step</label>
+                  @if (job.value.html_steps_data[step.value.id] != null) {
+                    <span nz-icon nzType="copy" nzTheme="fill" class="copy-icon" (click)="copyJobOutput(job.value.html_steps_data[step.value.id])">copy</span>
+                  }
+                  <div class="job-block-html" [innerHTML]="sanitizeHtml(decodeHtml(job.value.html_steps_data[step.value.id] || ''))">
+                  </div>
+                  @if(job.value.image_steps_data[step.value.id]) {
+                  <div class="job-block-image">
+                    <img [src]="'data:image/png;base64,' + job.value.image_steps_data[step.value.id]" alt="Image response" style="width: 100%;" />
+                  </div>
+                  }
+                </div>
+                <div class="job-block-footer">
+                  <div class="job-block-footer-left">
+                    <button nz-button nzType="primary" (click)="removeStep(job.key, $index)">Remove</button>
+                  </div>
+                  <div class="job-block-footer-right">
+                    <button nz-button nzType="primary" (click)="runStep(job.key, $index)" class="run-step-btn">Save & Run This Step</button>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+            <div class="job-block-footer">
+              <div class="job-block-footer-left">
+                <button nz-button nzType="primary" (click)="addStep(job.key)">Add Step (Manual)</button>
+              </div>
+              <div class="job-block-footer-right">
+                <button nz-button nzType="primary" (click)="saveJob(job.value, job.key)">Save & Run All Steps</button>
+              </div>
+            </div>
+          </form>
+          }
+        </div>
+        }
+        <ng-template #closeIcon>
+          <i nz-icon nzType="delete" nzTheme="outline" class="delete-icon" (click)="deleteJob(job.key)"></i>
+        </ng-template>
+        </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+    </nz-col>
+    }
+    <nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" class="job-col">
+      <div class="job-block-content">
+        <div>
+          <label>Space ID</label>
+          <nz-select nzPlaceHolder="Select space" [(ngModel)]="newJobCollectionId"  [ngModelOptions]="{standalone: true}">
+            @for(collection of allCollections; track collection.collection_id) {
+            <nz-option [nzValue]="collection.collection_id" [nzLabel]="collection.collection_name"></nz-option>
+            }
+          </nz-select>
+        </div>
+        <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon add-job" (click)="addJob()"></i>
+      </div>
+    </nz-col>
+  </nz-row>
+</div> -->
+
+<div class="job-container">
+  <!-- Left Panel: List of Jobs -->
+  <div class="job-list-panel">
+    <div class="job-list">
+      @for(job of jobs | keyvalue; track job.key) {
+      <div class="job-list-item" [class.selected]="selectedJobKey === +job.key" (click)="selectJob(+job.key)">
+        <span>{{ job.value.title }}</span>
+      </div>
+      }
+    </div>
+    <!-- <div>
+      <label>Space ID</label>
+      <nz-select nzPlaceHolder="Select space" [(ngModel)]="newJobCollectionId"  [ngModelOptions]="{standalone: true}">
+        @for(collection of allCollections; track collection.collection_id) {
+        <nz-option [nzValue]="collection.collection_id" [nzLabel]="collection.collection_name"></nz-option>
+        }
+      </nz-select>
+    </div> -->
+    <i nz-icon nzType="plus" nzTheme="outline" class="plus-icon add-job" (click)="openBuildAgentModal()"></i>
+  </div>
+
+  <!-- Right Panel: Selected Job Details -->
+  <div class="job-blocks">
+    @if(selectedJobKey) {
+    <div class="job-block-content">
+      <nz-collapse>
+        <nz-collapse-panel nzHeader="{{ jobs[selectedJobKey].title }}" [nzActive]="true" [nzExtra]="closeIcon">
+          <h3>{{ jobs[selectedJobKey].title }}</h3>
+          @if(jobs[selectedJobKey].dataLoading) {
+          <nz-spin [nzSize]="'large'"></nz-spin>
+          } @else {
+          <form [formGroup]="jobsForm[selectedJobKey]">
+            <label>Space ID</label>
+            <nz-select formControlName="job_collection_id" nzPlaceHolder="Select space">
+              @for(collection of allCollections; track collection.collection_id) {
+              <nz-option [nzValue]="collection.collection_id" [nzLabel]="collection.collection_name"></nz-option>
+              }
+            </nz-select>
+            <!-- <label>Query</label>
+            <textarea nz-input formControlName="query" placeholder="What do you want do?" rows="4"></textarea>
+            <button nz-button nzType="primary" (click)="createSteps(selectedJobKey)">Generate with AI</button> -->
+            <div>
+              <label>API Endpoint url (https://api-baseurl/functions)</label>
+              <input nz-input formControlName="api_endpoint" placeholder="/api-name" />
+            </div>
+          </form>
+          <div class="job-steps">
+            @if(stepsForm[selectedJobKey]) {
+            <form [formGroup]="stepsForm[selectedJobKey]">
+              <label>Input Parameters (OPTIONAL, not saved, enter for each Run, refer as $input_params where needed)</label>
+              <textarea nz-input [(ngModel)]="jobInputsMap[selectedJobKey]" [ngModelOptions]="{standalone: true}" placeholder="Input params if any" rows="4"></textarea>
+              <label>Steps</label>
+              <div formArrayName="steps">
+                @for(step of getStepsFormArray(selectedJobKey).controls; track $index) {
+                <div [formGroupName]="$index" class="step-form-group">
+                  <label>Input Context</label>
+                  <nz-select formControlName="file_category" nzPlaceHolder="Enter file category">
+                    <nz-option nzValue='TEXT_FILES' nzLabel='TEXT FILES'></nz-option>
+                    <nz-option nzValue='SPREADSHEET_FILES' nzLabel='SPREADSHEET FILES'></nz-option>
+                    <nz-option nzValue='PREVIOUS_OUTPUT' nzLabel='PREVIOUS OUTPUT'></nz-option>
+                  </nz-select>
+                  <div class="filter-item">
+                    <label for="filteredFile">Filter Files</label>
+                    <nz-select id="filteredFile" nzPlaceHolder="Select file" formControlName="selected_file_ids" nzMode="multiple" class="file-select">
+                      @for(file of fileList; track file.file_id) {
+                      <nz-option [nzValue]="file.file_id" [nzLabel]="file.file_name"></nz-option>
+                      }
+                    </nz-select>
+                  </div>
+                  <div class="filter-item">
+                    <label for="toolList">Choose the Tool</label>
+                    <nz-select id="toolList" nzPlaceHolder="Choose a Tool" formControlName="tool_id" class="file-select" >
+                      @for(tool of toolList; track tool.tool_id) {
+                      <nz-option [nzValue]="tool.tool_id" [nzLabel]="tool.tool_name"></nz-option>
+                      }
+                    </nz-select>
+                  </div>
+                  <label>{{ getSelectedTool(step.value.tool_id)?.textarea_label || 'Describe the Process to be done on the Input' }}</label>
+                  <textarea nz-input formControlName="prompt" placeholder="{{getSelectedTool(step.value.tool_id)?.textarea_placeholder || 'What process to do...'}}" rows="4"></textarea>
+                  @if((getSelectedTool(step.value.tool_id)?.output_format_flag !== false)){
+                    <label>Output Format</label>
+                    <input nz-input formControlName="output_format" placeholder="Eg: Share in HTML format" />
+                  }
+                  <div class="job-block-output">
+                    <label>Output of the Step</label>
+                    @if (jobs[selectedJobKey].html_steps_data[step.value.id] != null) {
+                      <span nz-icon nzType="copy" nzTheme="fill" class="copy-icon" (click)="copyJobOutput(jobs[selectedJobKey].html_steps_data[step.value.id])">copy</span>
+                    }
+                    <div class="job-block-html" [innerHTML]="sanitizeHtml(decodeHtml(jobs[selectedJobKey].html_steps_data[step.value.id] || ''))">
+                    </div>
+                    @if(jobs[selectedJobKey].image_steps_data[step.value.id]) {
+                    <div class="job-block-image">
+                      <img [src]="'data:image/png;base64,' + jobs[selectedJobKey].image_steps_data[step.value.id]" alt="Image response" style="width: 100%;" />
+                    </div>
+                    }
+                  </div>
+
+                  <div class="job-block-footer">
+                    <div class="job-block-footer-left">
+                      <button nz-button nzType="primary" (click)="removeStep(selectedJobKey, $index)">Remove</button>
+                    </div>
+                    <div class="job-block-footer-right">
+                      <button nz-button nzType="primary" (click)="runStep(selectedJobKey, $index)" class="run-step-btn">Save & Run This Step</button>
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+              <div class="job-block-footer">
+                <div class="job-block-footer-left">
+                  <button nz-button nzType="primary" (click)="addStep(selectedJobKey)">Add Step (Manual)</button>
+                </div>
+                <div class="job-block-footer-right">
+                  <button nz-button nzType="primary" (click)="saveJob(jobs[selectedJobKey], selectedJobKey)">Save & Run All Steps</button>
+                </div>
+              </div>
+            </form>
+            }
+          </div>
+          }
+          <ng-template #closeIcon>
+            <i nz-icon nzType="delete" nzTheme="outline" class="delete-icon" (click)="deleteJob(selectedJobKey)"></i>
+          </ng-template>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </div>
+    } @else {
+    <div class="no-job-selected">
+      <p>Please select a job from the left panel to view details.</p>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- Template for Create Organization Modal -->
+<ng-template #buildAgentTemplate>
+  <div>
+    <label for="spaceId">Choose a Space:</label>
+    <nz-select [(ngModel)]="newJobCollectionId" id="spaceId" nzPlaceHolder="Select space" [ngModelOptions]="{standalone: true}">
+      @for(collection of selectCollectionOptions; track collection.collection_id) {
+      <nz-option [nzValue]="collection.collection_id" [nzLabel]="collection.collection_name"></nz-option>
+      }
+    </nz-select>
+  </div>
+</ng-template>

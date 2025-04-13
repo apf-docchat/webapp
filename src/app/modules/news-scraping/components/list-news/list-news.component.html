@@ -1,0 +1,13 @@
+<section class="file_list_wrapper">
+    <div class="files">
+        <!-- <div class="title">
+            News
+        </div> -->
+        <!-- <label class="title" for="uploadedFiles">News</label> -->
+        <div class="list_wrapper">
+            @for (article of articleList; track article._id;) {
+            <app-news-card [article]="article"></app-news-card>
+            }
+        </div>
+    </div>
+</section>

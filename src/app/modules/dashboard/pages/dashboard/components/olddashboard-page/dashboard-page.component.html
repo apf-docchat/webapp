@@ -1,0 +1,92 @@
+<nz-layout class="layout">
+  <nz-header>
+    <div nz-row style="align-items: center;">
+      <div style="display: flex;">
+        <div class="header-logo">
+          <a [routerLink]="['/']" style="font-weight: 600;">
+            <!-- <img ngSrc="/assets/brand-assets/lockup-primary.svg" width="100" height="22" priority="true"
+              alt="DocChat Logo" class="app-logo" /> -->
+            Home
+          </a>
+        </div>
+      </div>
+      <div style="flex: 1 1 auto; margin-left: 35px;"></div>
+      <div>
+        <app-user-nav></app-user-nav>
+      </div>
+    </div>
+  </nz-header>
+  <nz-content>
+    @if(this.activeOrg===null){
+    <div class="inner-content">
+      <div>
+        <h2>Organizations</h2>
+      </div>
+      <div>
+        <p style="color: #585858;">Select an organization to continue</p>
+      </div>
+      <div class="app-tiles" style="margin-top: 10px">
+        @for(org of organizationList;track org.organization_id){
+        <div [class]="['org_wrapper',org.organization_id === activeOrg ? 'active':'']"
+          (click)="selectOrg(org.organization_id)">
+          <label for="" [class]="[org.organization_id === activeOrg ? 'active':'']">{{org.organization_name}}</label>
+        </div>
+        }
+      </div>
+    </div>
+    }@else {
+    <div class="inner-content">
+      <div class="heading">
+        <h3><span> <span nz-icon nzType="caret-left" nzTheme="outline"
+              style="color: #1463db; font-size: 12px;margin-right: 5px;"></span></span><span
+            (click)="backToOrgSelection()">{{activeOrgName}}</span> / Modules</h3>
+        <button nz-button nzType="primary" nzSize="small" (click)="backToOrgSelection()">Change Organization</button>
+      </div>
+      <nz-divider style="margin: 10px 0;"></nz-divider>
+      <div class="app-tiles">
+        @for(module of modulesList;track module.module_id){
+        <div
+          [class]="['module_wrapper',module.module_type,workingModuleList.includes(module.module_type)?'':'coming_soon']"
+          (click)="goto(module.module_type)">
+          <label [class]="workingModuleList.includes(module.module_type)?'':'coming_soon'"
+            for="">{{module.module_name}}</label>
+        </div>
+        }
+        @empty {
+        <nz-empty></nz-empty>
+        }
+      </div>
+    </div>
+
+    <div class="inner-content" style="margin-bottom: 20px;">
+      <div class="heading">
+        <h3>
+          Collections
+        </h3>
+        <button nz-button nzType="primary" nzSize="small" (click)="openComponent('createCollection',null)">
+          <span nz-icon nzType="folder-add" nzTheme="outline"></span> New Space
+        </button>
+        <button nz-button nzType="primary" nzSize="small" (click)="openComponent('uploadFile',null)">
+          <span nz-icon nzType="folder-add" nzTheme="outline"></span> Add File
+        </button>
+      </div>
+      <nz-divider style="margin: 10px 0;"></nz-divider>
+      <div class="icon-app-tiles icon_wrapper" style="margin-top: 20px">
+        @for(collection of collectionList;track collection.collection_name){
+        <div class="icon_wrapper" (click)="openComponent('collectionView',collection)">
+          <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+            <div class="count">
+              {{collection.files.length}}
+            </div>
+          </span>
+          <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+        </div>
+        }
+        @empty {
+        <nz-empty></nz-empty>
+        }
+      </div>
+    </div>
+    }
+  </nz-content>
+</nz-layout>

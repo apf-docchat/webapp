@@ -1,0 +1,311 @@
+<section class="ra_wrapper">
+    @if(collectionSelected){
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3><!-- <span> <span nz-icon nzType="caret-left" nzTheme="outline" (click)="collectionSelected=null"
+                            style="color: #1463db; font-size: 12px;margin-right: 5px;"></span></span> -->
+                    Metadata & Settings > Space: {{collectionSelected.collection_name}}</h3>
+                <!-- <button nz-button nzType="primary" nzSize="small" (click)="collectionSelected=null">Change
+                    Space</button> -->
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <nz-tabset>
+                <nz-tab nzTitle="Metadata">
+                    <nz-collapse style="background-color: #cedaff00;">
+                        @for (panel of panels; track panel) {
+                        @if(panel.name==='Define/Edit Metadata Fields'){
+                        <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active"
+                            [nzDisabled]="panel.disabled" [style]="panel.customStyle">
+                            <div style="display: flex; flex-direction: column; gap:5px">
+                                <!-- <h5 style="margin: 0px;">File populated status:</h5>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div style="display: flex;flex-direction: column; flex:1">
+                                                <nz-progress [nzPercent]="metadataPercentageValue"></nz-progress>
+                                                <p style="font-size: 10px;margin: 0px;">{{metadataFileUploaded}} out of
+                                                    {{metadataFileUploadedOutOf}} files populated</p>
+                                            </div>
+                                            <div>
+                                                <button nz-button nzType="primary" (click)="getMetaDataStatus()">Check status</button>
+                                            </div>
+                                        </div>
+                
+                                        <nz-divider class="metadata_divider"></nz-divider> -->
+                                <!-- <textarea nz-input [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+                                            [disabled]="!metadataStringEditable" [(ngModel)]="metadataString"></textarea> -->
+                                <div class="metadata_key_list">
+                                    <label class="heading" for="metaDataList">List Metadata Fields</label>
+                                    @for (metadata of metadataList; track metadata.schema_id; let i = $index) {
+                                    <div class="metadata_key_item">
+                                        <p>{{i+1}}: <span style="font-weight: 800;">{{metadata.field}} </span> :
+                                            {{metadata.description}}</p>
+                                        <span style="cursor: pointer;" nz-icon nzType="edit" nzTheme="outline"
+                                            (click)="openMetaDataCrudModal('edit',metadata)"></span>
+                                    </div>
+                                    }@empty {
+                                    <p>No metadata found</p>
+                                    }
+                                </div>
+                                <div style="display: flex;flex-wrap: wrap; gap: 5px;">
+                                    <!-- @if(!metadataStringEditable){
+                                            <button nz-button nzType="primary" (click)="editMetadata()">Edit</button>
+                                            }@else {
+                                            <button nz-button nzType="primary" (click)="metadataCancel()">Cancel</button>
+                                            } -->
+                                    <button nz-button nzType="primary"
+                                        (click)="openMetaDataCrudModal('add',null,metadataList)">
+                                        Add Metadata Fields
+                                    </button>
+                                    <button nz-button nzType="primary" (click)="generateMetadata()">
+                                        Generate Metadata Fields
+                                    </button>
+                                    @if(metadataList.length>0){
+                                    <button nz-button nzType="primary"
+                                        (click)="openMetaDataCrudModal('reArrange',null,metadataList)">
+                                        Re-Order Metadata Values
+                                    </button>
+                                    <button nz-button nzType="default" nzDanger
+                                        (click)="openMetaDataCrudModal('delete',null,metadataList)">
+                                        Delete Metadata Values
+                                    </button>
+                                    }
+                                    <!-- <button nz-button nzType="primary" (click)="saveMetadataString()">
+                                                {{metadataString !== metadataStringCopy? 'Save & ':''}}Redo All Metadata
+                                            </button> -->
+                                    <!-- <button nz-button nzType="primary" [disabled]="metadataStringEditable"
+                                                (click)="saveMetadataString(true)">
+                                                Populate Remaining Metadata
+                                            </button> -->
+                                </div>
+                            </div>
+                        </nz-collapse-panel>
+                        }
+
+                        @if(panel.name==='Populate Metadata Values'){
+                        <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active"
+                            [nzDisabled]="panel.disabled" [style]="panel.customStyle">
+                            <div style="display: flex; flex-direction: column; gap:5px">
+                                <div class="metadata_key_list">
+                                    <label class="heading" for="metaDataList" style="justify-content: flex-start;">List
+                                        Files
+                                        @if(getFileCountWithLessThan30percent()>0){
+                                        <span>
+                                            <span nz-icon nzType="warning" nzTheme="outline"
+                                                style="color:#de2f14"></span>
+                                            : {{getFileCountWithLessThan30percent()}}
+                                            File@if(getFileCountWithLessThan30percent()>1){<span>s</span>} with less
+                                            than 30%
+                                            completion
+                                        </span>
+                                        }
+                                    </label>
+                                    @for (metadataFile of metadataFileList; track metadataFile.file_id; let i = $index)
+                                    {
+                                    <div class="metadata_key_item select no-select" (click)="selectFile($event,i)"
+                                        [style.background-color]="metadataFile.processed_percentage <= 30?'#f5e0b8':'#d8e4ff'"
+                                        [style.color]="">
+                                        <div class="cover"></div>
+                                        <label nz-checkbox [(ngModel)]="metadataFile.isSelected"></label>
+                                        <p> {{metadataFile.file_name}} </p>
+                                        <div class="progress">
+                                            <nz-progress [nzPercent]="metadataFile.processed_percentage"></nz-progress>
+                                        </div>
+                                    </div>
+                                    }@empty {
+                                    <p>No metadata files found</p>
+                                    }
+                                </div>
+                                <div style="display: flex;flex-wrap: wrap; gap: 5px;">
+                                    <button nz-button nzType="primary" (click)="repopulateMetadata()">
+                                        Re-Populate Selected Metadata
+                                    </button>
+                                    <button nz-button nzType="primary" (click)="confirmRepopulateAll()">
+                                        Re-Populate All Metadata
+                                    </button>
+                                    <button nz-button nzType="primary"
+                                        (click)="downloadMetadataString()">Download</button>
+                                    <nz-upload [nzAction]="uploadUrl" [nzHeaders]="{ 
+                                            Authorization: token,
+                                            'organization-id': orgId
+                                        }" [nzData]="{ 'collection_id': collectionSelected.collection_id}"
+                                        [nzAccept]="'.csv'" [nzShowUploadList]="false"
+                                        (nzChange)="handleChange($event)">
+                                        <button nz-button>
+                                            <span nz-icon nzType="upload"></span>
+                                            Upload CSV
+                                        </button>
+                                    </nz-upload>
+                                </div>
+                            </div>
+                        </nz-collapse-panel>
+                        }
+                        }
+                    </nz-collapse>
+                </nz-tab>
+                <nz-tab nzTitle="Custom Instructions, Chat Instructions etc.">
+                    <nz-collapse style="background-color: #cedaff00;">
+                        @for (panel of panels; track panel) {
+                        @if(panel.name==='Custom Instructions'){
+                        <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active"
+                            [nzDisabled]="panel.disabled" [style]="panel.customStyle">
+                            <div style="display: flex; flex-direction: column; gap:5px;">
+                                <h5 style="margin: 0px;">Custom Instructions:</h5>
+                                <textarea nz-input [nzAutosize]="{ minRows: 5, maxRows: 10 }"
+                                    [(ngModel)]="customInstruction" [disabled]="!customInstructionEditable"></textarea>
+                                <div style="display: flex;flex-wrap: wrap; gap: 5px;">
+                                    @if(customInstructionEditable){
+                                    <button nz-button nzType="primary"
+                                        (click)="customInstructionCancel()">Cancel</button>
+                                    }
+                                    <button nz-button nzType="primary"
+                                        (click)="customInstructionAction()">{{customInstructionEditable?'Save':'Edit'}}</button>
+                                    @if(customInstruction == '') {
+                                        <button nz-button nzType="primary"
+                                        (click)="generateCustomInstructions()">Generate Instructions</button>
+                                    }
+                                </div>
+                            </div>
+                        </nz-collapse-panel>
+                        }
+
+                        @if(panel.name==='Chat Instructions'){
+                        <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active"
+                            [nzDisabled]="panel.disabled" [style]="panel.customStyle">
+                            <div style="display: flex; flex-direction: column; gap:5px">
+                                <div class="metadata_key_list">
+                                    <label class="heading" for="metaDataList">List of Instructions</label>
+                                    <div style="display: flex; gap:5px">
+                                        <input nz-input placeholder="Instructions" [(ngModel)]="chatInstructionsValue"
+                                            type="text" />
+                                        <button nz-button nzType="primary" (click)="addInstructions()">
+                                            Add
+                                        </button>
+                                    </div>
+                                    <nz-divider></nz-divider>
+                                    @for (instructions of chatInstructionsList; track $index; let i = $index) {
+                                    <!-- <div class="metadata_key_item">
+                                        <p>{{i+1}}: <span style="font-weight: 800;">{{instructions}} </span> </p>
+                                        <span style="cursor: pointer;" nz-icon nzType="edit" nzTheme="outline"
+                                            (click)="updateChatInstructions()"></span>
+                                    </div> -->
+                                    <div style="display: flex; gap:5px; margin-bottom: 10px;">
+                                        <input nz-input placeholder="Instructions"
+                                            [(ngModel)]="chatInstructionsList[$index]" type="text" />
+                                        <button nz-button nzType="default" nzDanger
+                                            (click)="deleteInstructions($index)">
+                                            Delete
+                                        </button>
+                                    </div>
+                                    }@empty {
+                                    <p>No Instructions found</p>
+                                    }
+                                </div>
+                                <div style="display: flex;flex-wrap: wrap; gap: 5px;">
+                                    @if(chatInstructionsList.length>0){
+                                    <button nz-button nzType="primary" (click)="updateChatInstructions()">
+                                        Save Instructions
+                                    </button>
+                                    }
+                                </div>
+                            </div>
+                        </nz-collapse-panel>
+                        }
+
+                        @if(panel.name==='Summarise Files'){
+                        <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active"
+                            [nzDisabled]="panel.disabled" [style]="panel.customStyle">
+                            <div style="display: flex; flex-direction: column; gap:5px">
+                                <h5 style="margin: 0px;">Summarise Files status:</h5>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="display: flex;flex-direction: column; flex:1">
+                                        <nz-progress [nzPercent]="summaryPercentageValue"></nz-progress>
+                                        <p style="font-size: 10px;margin: 0px;">{{summaryFileUploaded}} out of
+                                            {{summaryFileUploadedOutOf}} files summarised</p>
+                                    </div>
+                                    <div>
+                                        <button nz-button nzType="primary" (click)="getSummarySatus()">Check
+                                            status</button>
+                                    </div>
+                                </div>
+
+                                <!-- <textarea nz-input [nzAutosize]="{ minRows: 5, maxRows: 10 }"></textarea> -->
+                                <h4>Sample Short Summary</h4>
+                                <div class="summary_display">
+                                    {{shortSummary?shortSummary:'No summary added' }}
+                                </div>
+                                <h4>Sample Long Summary</h4>
+                                <div class="summary_display">
+                                    {{longSummary?longSummary:'No summary added'}}
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    <button nz-button nzType="primary" (click)="redoAllSummaries(true)">Summarize
+                                        Remaining
+                                        Files</button>
+                                    <button nz-button nzType="primary" (click)="redoAllSummaries()">Redo All
+                                        Summaries</button>
+                                    <button nz-button nzType="primary" (click)="downloadSummery()">Download</button>
+                                </div>
+                            </div>
+                        </nz-collapse-panel>
+                        }
+
+                        @if(panel.name==='FAQs'){
+                        @if(collectionSelected){
+                        <app-faq [collectionSelected]="collectionSelected"></app-faq>
+                        }
+                        }
+                        }
+                    </nz-collapse>
+                </nz-tab>
+            </nz-tabset>
+        </div>
+    </div>
+    }
+    @else {
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3><span> <span nz-icon nzType="caret-left" nzTheme="outline" (click)="back()"
+                            style="color: #1463db; font-size: 12px;margin-right: 5px;"></span></span>
+                    Docchat Settings</h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <h4>Choose a collection to proceed</h4>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(collection of collectionList;track collection.collection_name){
+                <div class="icon_wrapper" (click)="selectCollection(collection)">
+                    <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                        <div class="count">
+                            {{collection.files.length}}
+                        </div>
+                    </span>
+                    <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+                </div>
+                }
+                @empty {
+                <nz-empty></nz-empty>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</section>
+
+
+<nz-modal [(nzVisible)]="showConfirmRepopulationAll" nzTitle="Confirm Re-Population All" (nzOnCancel)="handleCancel()">
+    <div *nzModalContent>
+        <h3>Are you sure you want to re-populate all metadata files?</h3>
+        <p>Confirm by entering the collection name : <span
+                style="font-weight: 600;color: indianred;">{{collectionSelected?.collection_name}}</span>
+        </p>
+        <input nz-input [placeholder]="collectionSelected?.collection_name" [(ngModel)]="confirmCollectionName"
+            type="text" />
+    </div>
+    <div *nzModalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" (click)="handleOk()"
+            [disabled]="!(collectionSelected?.collection_name === confirmCollectionName)">
+            Re-Populate All Metadata
+        </button>
+    </div>
+</nz-modal>

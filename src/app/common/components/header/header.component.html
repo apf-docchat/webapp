@@ -1,0 +1,28 @@
+<nz-layout>
+    <nz-header>
+        <div nz-row style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center;">
+                <!-- @if(!showBackButton){ -->
+                <div class="header-logo">
+                    <a (click)="homeNavigate()">
+                        <img [src]="logoUrl" width="75" height="40" priority="true"
+                            alt="DocChat Logo" class="app-logo" />
+                    </a>
+                </div>
+                <!-- }@else {
+                <div style="color: #1463db; font-weight: 600;">
+                    <a [routerLink]="['/']" style="display: flex; align-items: center;">
+                        <span nz-icon nzType="caret-left" nzTheme="outline"
+                            style="color: #1463db; font-size: 12px;margin-inline: 5px;"></span>
+                        <span style=" font-size: 16px;"> {{title}}</span>
+                    </a>
+                </div>
+                } -->
+            </div>
+            <div style="flex: 1 1 auto;"></div>
+            <div>
+                <app-user-nav></app-user-nav>
+            </div>
+        </div>
+    </nz-header>
+</nz-layout>

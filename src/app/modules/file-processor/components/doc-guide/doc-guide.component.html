@@ -1,0 +1,49 @@
+<section class="ra_wrapper">
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3><span> <span nz-icon nzType="caret-left" nzTheme="outline" (click)="back()"
+                            style="color: #1463db; font-size: 12px;margin-right: 5px;"></span></span>
+                    Docguide Settings</h3>
+                <!-- <button nz-button nzType="primary" nzSize="small" (click)="collectionSelected=null">
+                    Change Collection
+                </button> -->
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <nz-collapse style="background-color: #cedaff00;">
+                @for (panel of panels; track panel) {
+                <nz-collapse-panel [nzHeader]="panel.name" [nzActive]="panel.active" [nzDisabled]="panel.disabled"
+                    [style]="panel.customStyle">
+                    @if(panel.name==='Add files to docGuide'){
+                    <div style="display: flex; flex-direction: column; gap:5px">
+                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                            <h4 style="margin: 0px;"> DocGuide files: {{collectionList.length}}</h4>
+
+                            <div style="display: flex; gap: 5px;">
+                                <button nz-button nzType="primary" nzSize="small"
+                                    (click)="openAddandDeleteModal('add')">Add</button>
+                                <button nz-button nzType="primary" nzSize="small" nzDanger
+                                    (click)="openAddandDeleteModal('delete')">Delete</button>
+                            </div>
+                        </div>
+                        <nz-divider style="margin: 5px 0;"></nz-divider>
+
+                        <div class="wrapper_files">
+                            @for(item of collectionList;track item.file_id){
+                            <div class="file">
+                                <span class="icon" nz-icon nzType="file-pdf" nzTheme="outline"></span>
+                                <p>{{item.file_name}}</p>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+
+                </nz-collapse-panel>
+                }
+            </nz-collapse>
+        </div>
+    </div>
+
+
+</section>

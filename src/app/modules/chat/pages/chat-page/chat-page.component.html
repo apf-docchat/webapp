@@ -1,0 +1,133 @@
+<section class="ra_wrapper">
+    <app-header></app-header>
+    @if(collectionSelected){
+        <nz-tabset>
+            <nz-tab nzTitle="Chat">
+                @if( collectionSelected && activeSection!== 'all'){
+                    <div class="section_selection">
+                        <span nz-icon nzType="unordered-list" nzTheme="outline" [class]="activeSection === 'files'?'active':''"
+                            (click)="setScreen('files')"></span>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <span nz-icon nzType="message" nzTheme="outline" [class]="activeSection === 'chat'?'active':''"
+                            (click)="setScreen('chat')"></span>
+                    </div>
+                    }
+            <div class="content">
+                @if(activeSection === 'files'|| activeSection === 'all') {
+                    <div class="collection-container">
+                        <div class="app-list-collection-files-wrapper">
+                            
+                                <!-- [style.display]="(activeSection === 'files'|| activeSection === 'all')?'block':'none'" -->
+                                <app-list-collection-files
+                                    [collectionSelected]="collectionSelected">
+                                </app-list-collection-files>
+                        </div>
+                        <!-- @if(insights.length > 0){
+                            <div class="insight-blocks" >
+                                <div class="heading">
+                                    <h3>
+                                        Insights
+                                    </h3>
+                                </div>
+                                @for (insight of insights; track $index) {
+                                <div class="insight-block-content">
+                                    <div class="insight-block-title">
+                                        {{insight.title}}
+                                    </div>
+                                    <div class="insight-block-html" [innerHTML]="sanitizeHtml(decodeHtml(insight.html || ''))">
+                                    </div>
+                                    @if(insight.image_data) {
+                                        <div class="insight-block-image">
+                                            <img [src]="'data:image/png;base64,' + insight.image_data" alt="Image response"  style="width: 100%;" />
+                                        </div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        } hide date: 30-11-2024-->
+                    </div>
+                }
+                @if(activeSection === 'chat'|| activeSection === 'all'){
+                    <!-- [style.display]="(activeSection === 'chat'|| activeSection === 'all')?'block':'none'" -->
+                    <app-chat-screen 
+                        [collection]="collectionSelected" (newChat)="selectCollection(null)">
+                    </app-chat-screen>
+                }
+            </div>
+            </nz-tab>
+            <nz-tab nzTitle="Dashboard">
+                <app-insights-page></app-insights-page>
+            </nz-tab>
+            <!-- <nz-tab nzTitle="Agents">
+                <app-jobs-page></app-jobs-page>
+            </nz-tab> -->
+            <nz-tab nzTitle="Admin">
+                <!-- <collection-mgmt></collection-mgmt> -->
+                @if (this.activeOrgRole === 'SUPER_USER') {
+                    <app-doc-chat></app-doc-chat>
+                }
+            </nz-tab>
+        </nz-tabset>
+    }
+    @else {
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3>
+                    Choose your collection to start the chat
+                </h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <h3>Public Collections
+                <span class="spacer"></span>
+                <button nz-button nzType="primary" nzSize="small" (click)="openComponent('createCollection',null, modulesList, false)">
+                  <span nz-icon nzType="folder-add" nzTheme="outline"></span> New Space
+                </button>
+            </h3>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(collection of collectionList;track collection.collection_name){
+                    @if(!collection.is_private) {
+                        <div class="icon_wrapper" (click)="selectCollection(collection)">
+                            <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                                <div class="count">
+                                    {{collection.files.length}}
+                                </div>
+                            </span>
+                            <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+                        </div>
+                    }
+                }
+                @empty {
+                <nz-empty></nz-empty>
+                }
+            </div>
+            
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <h3>Private Collections
+            <span class="spacer"></span>
+            <button nz-button nzType="primary" nzSize="small" (click)="openComponent('createCollection',null, modulesList, true)">
+                <span nz-icon nzType="folder-add" nzTheme="outline"></span> New Space
+            </button>
+            </h3>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(collection of collectionList;track collection.collection_name){
+                    @if(collection.is_private) {
+                    <div class="icon_wrapper" (click)="selectCollection(collection)">
+                        <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                        <div class="count">
+                            {{collection.files.length}}
+                        </div>
+                        </span>
+                        <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+                        <em class="collection_description">{{collection.collection_description}}</em>
+                    </div>
+                    }
+                }
+                @empty {
+                    <nz-empty></nz-empty>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</section>

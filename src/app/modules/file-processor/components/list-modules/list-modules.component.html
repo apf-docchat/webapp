@@ -1,0 +1,23 @@
+<section class="ra_wrapper">
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3>
+                    Choose a module to proceed
+                </h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(collection of modulesList;track $index){
+                <div class="icon_wrapper" (click)="navigateTo(collection)">
+                    <span class="icon" nz-icon nzType="setting" nzTheme="outline"></span>
+                    <label class="collection_label" for="collection_name">{{collection}}</label>
+                </div>
+                }
+                @empty {
+                <nz-empty></nz-empty>
+                }
+            </div>
+        </div>
+    </div>
+</section>

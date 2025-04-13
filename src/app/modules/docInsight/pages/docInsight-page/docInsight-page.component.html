@@ -1,0 +1,49 @@
+<section class="ra_wrapper">
+    <app-header></app-header>
+    @if(collectionSelected){
+    <div class="content">
+        <app-list-collection-files
+            [style.display]="(activeSection === 'files'|| activeSection === 'all')?'block':'none'"
+            [collectionSelected]="collectionSelected"></app-list-collection-files>
+        <app-chat-screen [style.display]="(activeSection === 'chat'|| activeSection === 'all')?'block':'none'"
+            [collection]="collectionSelected" (newChat)="selectCollection(null)"></app-chat-screen>
+    </div>
+    }
+    @else {
+    <div class="collection_content">
+        <div class="inner-content">
+            <div class="heading">
+                <h3>
+                    Choose your collection to start the chat
+                </h3>
+            </div>
+            <nz-divider style="margin: 10px 0;"></nz-divider>
+            <div class="icon-app-tiles" style="margin-top: 20px">
+                @for(collection of collectionList;track collection.collection_name){
+                <div class="icon_wrapper" (click)="selectCollection(collection)">
+                    <span class="icon" nz-icon nzType="folder-open" nzTheme="fill">
+                        <div class="count">
+                            {{collection.files.length}}
+                        </div>
+                    </span>
+                    <label class="collection_label" for="collection_name">{{collection.collection_name}}</label>
+                </div>
+                }
+                @empty {
+                <nz-empty></nz-empty>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</section>
+
+@if( collectionSelected && activeSection!== 'all'){
+<div class="section_selection">
+    <span nz-icon nzType="unordered-list" nzTheme="outline" [class]="activeSection === 'files'?'active':''"
+        (click)="setScreen('files')"></span>
+    <nz-divider nzType="vertical"></nz-divider>
+    <span nz-icon nzType="message" nzTheme="outline" [class]="activeSection === 'chat'?'active':''"
+        (click)="setScreen('chat')"></span>
+</div>
+}

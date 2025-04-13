@@ -1,0 +1,15 @@
+<div class="faq_wrapper">
+    <div class="question_wrapper">
+        @for(faq of faqQuestion;track $index){
+        <div class="question_item">
+            <textarea nz-input placeholder="Question" nzAutosize [(ngModel)]="faqQuestion[$index]"></textarea>
+            @if($index != 0){
+            <button nz-button nzType="primary" (click)="removeQuestion($index)">Remove</button>
+            }
+
+        </div>
+        }
+        <button nz-button nzType="dashed" (click)="addMoreQuestions()">Add more question</button>
+        <button nz-button nzType="primary" (click)="addFaqQuestions()">Save</button>
+    </div>
+</div>

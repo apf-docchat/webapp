@@ -1,0 +1,53 @@
+<div class="collection_wrapper">
+    <div class="top_section">
+        <label class="collection_name" for="">Space Name</label>
+        <div class="input_section">
+            <nz-select [(ngModel)]="selectedCollection" (ngModelChange)="onCollectionChange()" nzShowSearch nzAllowClear
+                nzPlaceHolder="collections">
+                @for (item of collectionList; track item.collection_name) {
+                <nz-option [nzLabel]="item.collection_name" [nzValue]="item.collection_name"></nz-option>
+                }
+            </nz-select>
+        </div>
+        @if(this.actionType==='moveFiles'){
+        <label class="collection_name" for="">Move to collection</label>
+        <div class="input_section">
+            <nz-select [(ngModel)]="toMoveSelectedCollection" (ngModelChange)="onMoveCollectionChange()" nzShowSearch
+                nzAllowClear nzPlaceHolder="collections"
+                [nzStatus]="(toMoveSelectedCollection==='' && submited)?'error':''">
+                @for (item of moveToCollectionList; track item.collection_name) {
+                <nz-option [nzLabel]="item.collection_name" [nzValue]="item.collection_name"></nz-option>
+                }
+            </nz-select>
+        </div>
+        @if(toMoveSelectedCollection==='' && submited){
+        <p class="danger_text">
+            Selection a collection to move file to.
+        </p>
+        }
+
+        }
+        <div class="control_wrapper">
+            <button nz-button nzType="default" (click)="backToScreen(false)">Cancel</button>
+            <button nz-button nzType="primary" (click)="backToScreen(true)">
+                {{actionType==='moveFiles'?'Move':'Delete'}}</button>
+        </div>
+    </div>
+    <div>
+        <label for="" class="collection_name">{{files.length > 1?'Files':'File'}}</label>
+
+        <div class="file_name no-select select-all-row">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="allFilesSelected" (ngModelChange)="toggleAllFiles()" (click)="$event.stopPropagation()" class="select-all-checkbox">Select All</label>
+        </div>
+
+        @for (file of fileSelectionList; track file.file_id; let i = $index) {
+        <div class="file_name no-select" (click)="selectFile($event,i)" style="cursor: pointer;">
+            <div class="cover"></div>
+            <label nz-checkbox [(ngModel)]="file.isSelected"></label>
+            <div class="name">{{file.file_name}}</div>
+        </div>
+        }
+    </div>
+
+</div>

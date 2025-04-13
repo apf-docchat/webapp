@@ -1,0 +1,56 @@
+<div class="collection_wrapper">
+    <form [formGroup]="collectionForm" class="top_section">
+        <label class="collection_name" for="">Space Name</label>
+        <input nz-input type="text" formControlName="name"
+            [nzStatus]="name!.invalid && (name!.dirty || name!.touched)?'error' : ''" />
+
+        <label class="collection_name" for="">Description</label>
+        <textarea nz-input [nzAutosize]="{ minRows: 2, maxRows: 6 }" formControlName="description"
+            [nzStatus]="description!.invalid && (description!.dirty || description!.touched)?'error' : ''"></textarea>
+        <!-- If isPrivate list the Team in a dropdown-->
+        @if (!orgChosen) {
+            <label class="org_id" for="">Team</label>
+            <nz-select formControlName="org_id" class="full-width-select" nzPlaceHolder="Select a Team" [nzStatus]="org_id!.invalid && (org_id!.dirty || org_id!.touched)?'error' : ''">
+                <nz-option *ngFor="let org of orgs" [nzValue]="org.organization_id" [nzLabel]="org.organization_name"></nz-option>
+            </nz-select>
+        }
+
+        <label class="org_id" for="">Type (file or db or googlesheet)</label>
+        <nz-select formControlName="type" class="full-width-select" nzPlaceHolder="Select a Type" [nzStatus]="type!.invalid && (type!.dirty || type!.touched)?'error' : ''">
+            <nz-option *ngFor="let typeItem of types" [nzValue]="typeItem" [nzLabel]="typeItem"></nz-option>
+        </nz-select>
+        @if(type?.value === 'db' || type?.value === 'file-db'){
+            <label class="org_id" for="">DB URI</label>
+            <input nz-input type="text" formControlName="db_uri"
+                [nzStatus]="db_uri!.invalid && (db_uri!.dirty || db_uri!.touched)?'error' : ''" />
+        }
+        @if(type?.value === 'googlesheet'){
+            <label class="org_id" for="">Google Sheet URL (doesnt work on XLSX or XLS files)</label>
+            <input nz-input type="text" formControlName="googlesheet_url"
+                [nzStatus]="googlesheet_url!.invalid && (googlesheet_url!.dirty || googlesheet_url!.touched)?'error' : ''" />
+        }
+
+
+        <div style="display: none;">
+        <label class="collection_name" for="">Module Type</label>
+        <nz-select formControlName="module_id" class="full-width-select" nzPlaceHolder="Select a module type" [nzStatus]="module_id!.invalid && (module_id!.dirty || module_id!.touched)?'error' : ''">
+            <nz-option *ngFor="let module of modulesList" [nzValue]="module.module_id" [nzLabel]="module.module_name"></nz-option>
+        </nz-select>
+        <input type="hidden" formControlName="is_private" />
+        </div>
+    </form>
+    <div class="footer_section">
+        <nz-divider></nz-divider>
+        <div class="control_wrapper">
+            <button nz-button nzType="default" (click)="backToScreen(false, '')">Cancel</button>
+            <button nz-button nzType="primary" (click)="submit()">Save</button>
+        </div>
+    </div>
+</div>
+
+
+<ng-template let-fruit="data">
+    It's a
+    <nz-tag [nzColor]="fruit.color">{{ fruit.name }}</nz-tag>
+    <button nz-button nzSize="small">Cut It!</button>
+</ng-template>

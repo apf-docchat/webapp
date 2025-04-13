@@ -1,0 +1,16 @@
+<div class="card_wrapper">
+    <div class="title">{{article.title}}</div>
+    <div class="content">
+        {{article.description}}
+    </div>
+    <div class="controls">
+        <div>
+            {{article.created_date | date}}, <span style="font-weight: 500;">{{article.publisher.title}}</span>
+        </div>
+
+        <div class="open_link" (click)="openLinkInNewTab(article.url)">
+            <span nz-icon nzType="global" nzTheme="outline"></span>
+            Open Link
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+export const ACCESS_TOKEN = 'accessToken'
+export const USERNAME = 'username'
+export const ORG_ID = 'orgId'
+export const ORG_ROLE = 'orgRole'
+export const FNC_SEE = 'fncSee'
